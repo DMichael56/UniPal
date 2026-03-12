@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class GroupChatScreen extends StatelessWidget {
@@ -7,10 +8,10 @@ class GroupChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('the home sceen'),
+        title: const Text('Group Chat'),
       ),
       body: const Center(
-        child: Text('temporary'),
+        child: Text('This is the group chat screen.'),
       ),
     );
   }
