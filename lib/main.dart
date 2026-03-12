@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/screens/group_chat_screen.dart';
 import 'package:myapp/screens/login_screen.dart';
 import 'package:myapp/screens/profile_screen.dart';
+import 'package:myapp/screens/bookings_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -66,6 +67,15 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const GroupChatScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const BookingsScreen()),
               );
             },
           ),
