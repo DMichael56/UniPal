@@ -1,10 +1,93 @@
 [
-    {
-      "id": "user_001",
-      "name": "John Doe",
-      "email": "john@email.com",
-      "role": "user",
-      "location": "London",
-      "created_at": "2026-02-21T10:00:00"
-    }
-  ]
+  {
+    "id": "u001",
+    "name": "David Heil",
+    "email": "up2304778@myport.ac.uk",
+    "studentId": "UP2304778",
+    "faculty": "Faculty of Technology",
+    "course": "BSc Data Science",
+    "year": 2,
+    "avatar": "DH",
+    "location": "Portsmouth",
+    "groups": ["g001", "g002"],
+    "createdAt": "2024-09-16T08:42:00Z"
+  },
+  {
+    "id": "u002",
+    "name": "Kritika Rai",
+    "email": "up2267885@myport.ac.uk",
+    "studentId": "UP2267885",
+    "faculty": "Faculty of Technology",
+    "course": "BSc Software Engineering",
+    "year": 2,
+    "avatar": "KR",
+    "location": "Portsmouth",
+    "groups": ["g001"],
+    "createdAt": "2024-09-16T09:15:00Z"
+  },
+  {
+    "id": "u003",
+    "name": "Reem Mohammed",
+    "email": "up2270236@myport.ac.uk",
+    "studentId": "UP2270236",
+    "faculty": "Faculty of Technology",
+    "course": "BSc Software Engineering",
+    "year": 2,
+    "avatar": "RM",
+    "location": "Portsmouth",
+    "groups": ["g001", "g003"],
+    "createdAt": "2024-09-17T10:05:00Z"
+  },
+  {
+    "id": "u004",
+    "name": "Kirill Grancis",
+    "email": "up2268507@myport.ac.uk",
+    "studentId": "UP2268507",
+    "faculty": "Faculty of Technology",
+    "course": "BSc Computer Science",
+    "year": 2,
+    "avatar": "KG",
+    "location": "Portsmouth",
+    "groups": ["g001", "g002"],
+    "createdAt": "2024-09-16T11:30:00Z"
+  },
+  {
+    "id": "u005",
+    "name": "Gwen Phillips",
+    "email": "up2276967@myport.ac.uk",
+    "studentId": "UP2276967",
+    "faculty": "Faculty of Technology",
+    "course": "BSc Computer Science",
+    "year": 2,
+    "avatar": "GP",
+    "location": "Portsmouth",
+    "groups": ["g002", "g003"],
+    "createdAt": "2024-09-18T14:20:00Z"
+  },
+  {
+    "id": "u006",
+    "name": "Onkar Singh",
+    "email": "up2066719@myport.ac.uk",
+    "studentId": "UP2066719",
+    "faculty": "Faculty of Technology",
+    "course": "BSc Cyber Security",
+    "year": 2,
+    "avatar": "OS",
+    "location": "Portsmouth",
+    "groups": ["g002"],
+    "createdAt": "2023-09-18T09:50:00Z"
+  },
+  {
+    "id": "u007",
+    "name": "Harry Fenwick",
+    "email": "up2306147@myport.ac.uk",
+    "studentId": "UP2306147",
+    "faculty": "Faculty of Technology",
+    "course": "BSc Computer Science",
+    "year": 2,
+    "avatar": "HF",
+    "location": "Portsmouth",
+    "groups": ["g001", "g003"],
+    "createdAt": "2024-09-17T13:10:00Z"
+  }
+]
