@@ -1,34 +1,371 @@
-
 import 'package:flutter/material.dart';
 
-class BookingsScreen extends StatelessWidget {
-  const BookingsScreen({super.key});
+class BookingHubPage extends StatelessWidget {
+  const BookingHubPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('building name?'),
+        title: const Text('Bookings'),
+
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+          )
+        ],
       ),
-      body: ListView.builder(
-        itemCount: 1, // fake ones for now
-        itemBuilder: (context, index) {
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _tile(context, 'Start Booking (Step Flow)', const BookingStepperPage()),
+          _tile(context, 'Building Selection', const BuildingSelectionPage()),
+          _tile(context, 'Room Layout', const RoomLayoutPage()),
+          _tile(context, 'Booking Details', const BookingDetailsPage()),
+          _tile(context, 'Confirm Booking', const ConfirmBookingPage()),
+          _tile(context, 'View Booking', const ViewBookingPage()),
+          _tile(context, 'Cancel Booking', const CancelBookingPage()),
+        ],
+      ),
+    );
+  }
+
+  Widget _tile(BuildContext context, String text, Widget page) {
+    return Card(
+      child: ListTile(
+        title: Text(text),
+        trailing: const Icon(Icons.arrow_forward),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => page),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class BookingStepperPage extends StatefulWidget {
+  const BookingStepperPage({super.key});
+
+  @override
+  State<BookingStepperPage> createState() => _BookingStepperPageState();
+}
+
+class _BookingStepperPageState extends State<BookingStepperPage> {
+  int _currentStep = 0;
+
+  String? building;
+  String? room;
+  int people = 1;
+  String date = '';
+
+  void _continue() {
+    if (_currentStep < 5) {
+      setState(() => _currentStep++);
+    }
+  }
+
+  void _cancel() {
+    if (_currentStep > 0) {
+      setState(() => _currentStep--);
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Book a Room'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+          )
+        ],
+      ),
+      body: Stepper(
+        currentStep: _currentStep,
+        onStepContinue: _continue,
+        onStepCancel: _cancel,
+        steps: [
+          Step(
+            title: const Text('Building'),
+            content: DropdownButton<String>(
+              hint: const Text('Select building'),
+              value: building,
+              items: ['A', 'B', 'C']
+                  .map((b) => DropdownMenuItem(
+                        value: b,
+                        child: Text('Building $b (WiFi, Seats available)'),
+                      ))
+                  .toList(),
+              onChanged: (val) => setState(() => building = val),
+            ),
+          ),
+          Step(
+            title: const Text('Room'),
+            content: DropdownButton<String>(
+              hint: const Text('Select room'),
+              value: room,
+              items: ['101', '102', '201']
+                  .map((r) => DropdownMenuItem(
+                        value: r,
+                        child: Text('Room $r'),
+                      ))
+                  .toList(),
+              onChanged: (val) => setState(() => room = val),
+            ),
+          ),
+          Step(
+            title: const Text('Details'),
+            content: Column(
+              children: [
+                TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: 'Number of people'),
+                  onChanged: (val) => people = int.tryParse(val) ?? 1,
+                ),
+                TextField(
+                  decoration: const InputDecoration(labelText: 'Date / Time'),
+                  onChanged: (val) => date = val,
+                ),
+              ],
+            ),
+          ),
+          Step(
+            title: const Text('Confirm'),
+            content: Text(
+              'Building: $building\nRoom: $room\nPeople: $people\nDate: $date',
+            ),
+          ),
+          const Step(
+            title: Text('Booked'),
+            content: Text('Your booking is confirmed!'),
+          ),
+          const Step(
+            title: Text('Manage'),
+            content: Text('View or cancel bookings here (future feature)'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+//Building selection
+
+class BuildingSelectionPage extends StatelessWidget {
+  const BuildingSelectionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final buildings = [
+      {'name': 'Building A', 'amenities': 'WiFi, Projector', 'spaces': '10 spaces'},
+      {'name': 'Building B', 'amenities': 'Computers, AC', 'spaces': '5 spaces'},
+      {'name': 'Building C', 'amenities': 'Quiet Area', 'spaces': '2 spaces'},
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Select Building')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: buildings.map((b) {
           return Card(
-            margin: const EdgeInsets.all(10),
             child: ListTile(
-              leading: const Icon(Icons.calendar_today),
-              title: Text('Booking #${index + 1}'),
-              subtitle: const Text('i guess the details here'),
-              trailing: const Icon(Icons.more_vert),
+              title: Text(b['name']!),
+              subtitle: Text('${b['amenities']} • ${b['spaces']}'),
+              trailing: const Icon(Icons.arrow_forward),
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${b['name']} selected')),
+                );
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+// ROUGH room layout (to be changed a lot)
+
+class RoomLayoutPage extends StatelessWidget {
+  const RoomLayoutPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Room Layout')),
+      body: GridView.builder(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        itemCount: 20,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Seat ${index + 1} selected')),
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.green[300],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text(
+                  '${index + 1}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add the onPressed code here (this message is for who was assigned to design the UI)
-        },
-        child: const Icon(Icons.add),
+    );
+  }
+}
+
+///booking details
+
+class BookingDetailsPage extends StatefulWidget {
+  const BookingDetailsPage({super.key});
+
+  @override
+  State<BookingDetailsPage> createState() => _BookingDetailsPageState();
+}
+
+class _BookingDetailsPageState extends State<BookingDetailsPage> {
+  int people = 1;
+  DateTime? selectedDate;
+
+  Future<void> pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+    );
+
+    if (picked != null) {
+      setState(() => selectedDate = picked);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Booking Details')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Number of People',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (val) => people = int.tryParse(val) ?? 1,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: pickDate,
+              child: Text(
+                selectedDate == null
+                    ? 'Select Date'
+                    : selectedDate.toString().split(' ')[0],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//Confirm bookings
+class ConfirmBookingPage extends StatelessWidget {
+  const ConfirmBookingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Confirm Booking')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Booking Confirmed!')),
+            );
+          },
+          child: const Text('Confirm Booking'),
+        ),
+      ),
+    );
+  }
+}
+
+// View bookings
+
+class ViewBookingPage extends StatelessWidget {
+  const ViewBookingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bookings = ['Room 101 - Tomorrow', 'Room 202 - Friday'];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Your Bookings')),
+      body: ListView(
+        children: bookings
+            .map((b) => ListTile(
+                  title: Text(b),
+                  leading: const Icon(Icons.meeting_room),
+                ))
+            .toList(),
+      ),
+    );
+  }
+}
+
+//Cancel bookings
+
+class CancelBookingPage extends StatelessWidget {
+  const CancelBookingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bookings = ['Room 101 - Tomorrow', 'Room 202 - Friday'];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Cancel Booking')),
+      body: ListView(
+        children: bookings
+            .map((b) => ListTile(
+                  title: Text(b),
+                  trailing: const Icon(Icons.cancel),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('$b cancelled')),
+                    );
+                  },
+                ))
+            .toList(),
       ),
     );
   }
