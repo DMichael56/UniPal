@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter_application_1/screens/group_chat_screen.dart';
-import 'package:flutter_application_1/screens/login_screen.dart';
-import 'package:flutter_application_1/screens/bookings_screen.dart';
-import 'package:flutter_application_1/screens/profile_screen.dart';
+import 'package:myapp/screens/group_chat_screen.dart';
+import 'package:myapp/screens/login_screen.dart';
+import 'package:myapp/screens/bookings_screen.dart';
+import 'package:myapp/screens/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,10 +35,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomeDashboard(),
-    GroupSelectionPage(),
-    ProfileScreen(),
+  final List<Widget> _pages = [
+    const HomeDashboard(),
+    const GroupSelectionPage(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -92,7 +91,7 @@ class HomeDashboard extends StatelessWidget {
       mainAxisSpacing: 10,
       
       children: [
-        _card(context, 'Booking', Icons.meeting_room, const BookingHubPage()),
+        _card(context, 'Booking', Icons.meeting_room, const BookingsScreen()),
         _card(context, 'Notes', Icons.note, const RevisionNotesPage()),
         _card(context, 'Groups', Icons.group, const GroupSelectionPage()),
         _card(context, 'Calendar', Icons.calendar_month, const CalendarPage()),
