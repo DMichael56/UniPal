@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/models/booking_model.dart';
+import 'package:myapp/services/booking_service.dart';
 
 class BookingsScreen extends StatelessWidget {
   const BookingsScreen({super.key});
@@ -8,7 +10,6 @@ class BookingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bookings'),
-
         actions: [
           IconButton(
             icon: const Icon(Icons.home),
@@ -322,22 +323,45 @@ class ConfirmBookingPage extends StatelessWidget {
 
 // View bookings
 
-class ViewBookingPage extends StatelessWidget {
+class ViewBookingPage extends StatefulWidget {
   const ViewBookingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final bookings = ['Room 101 - Tomorrow', 'Room 202 - Friday'];
+  State<ViewBookingPage> createState() => _ViewBookingPageState();
+}
 
+class _ViewBookingPageState extends State<ViewBookingPage> {
+  late Future<List<Booking>> _bookings;
+
+  @override
+  void initState() {
+    super.initState();
+    _bookings = BookingService().getBookings();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Your Bookings')),
-      body: ListView(
-        children: bookings
-            .map((b) => ListTile(
-                  title: Text(b),
-                  leading: const Icon(Icons.meeting_room),
-                ))
-            .toList(),
+      body: FutureBuilder<List<Booking>>(
+        future: _bookings,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return ListView(
+              children: snapshot.data!
+                  .map((b) => ListTile(
+                        title: Text(b.title),
+                        subtitle: Text('${b.date} at ${b.startTime} - ${b.endTime}'),
+                        leading: const Icon(Icons.meeting_room),
+                      ))
+                  .toList(),
+            );
+          }
+        },
       ),
     );
   }
