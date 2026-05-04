@@ -63,7 +63,12 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   String? building;
   String? room;
   int people = 1;
-  String date = '';
+  DateTime? selectedDate;
+  String? selectedTime;
+
+  final List<String> timeSlots = List.generate(10, (index) {
+    return '${(index + 9).toString().padLeft(2, '0')}:00'; // 09:00 to 18:00
+  });
 
   void _continue() {
     if (_currentStep < 5) {
@@ -76,6 +81,20 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
       setState(() => _currentStep--);
     } else {
       Navigator.pop(context);
+    }
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
     }
   }
 
@@ -138,31 +157,47 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
                       icon: const Icon(Icons.remove),
                       onPressed: () {
                         if (people > 1) {
-                          setState(() {
-                            people--;
-                          });
+                          setState(() => people--);
                         }
                       },
                     ),
-                    Text(
-                      '$people',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                    Text('$people', style: Theme.of(context).textTheme.titleLarge),
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
                         if (people < 20) {
-                          setState(() {
-                            people++;
-                          });
+                          setState(() => people++);
                         }
                       },
                     ),
                   ],
                 ),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Date / Time'),
-                  onChanged: (val) => date = val,
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _pickDate,
+                      child: Text(selectedDate == null
+                          ? 'Select Date'
+                          : selectedDate.toString().split(' ')[0]),
+                    ),
+                    const SizedBox(width: 16),
+                    DropdownButton<String>(
+                      hint: const Text('Select Time'),
+                      value: selectedTime,
+                      items: timeSlots.map((time) {
+                        return DropdownMenuItem(
+                          value: time,
+                          child: Text(time),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedTime = newValue;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -170,7 +205,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
           Step(
             title: const Text('Confirm'),
             content: Text(
-              'Building: $building\nRoom: $room\nPeople: $people\nDate: $date',
+              'Building: $building\nRoom: $room\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}',
             ),
           ),
           const Step(
@@ -278,17 +313,23 @@ class BookingDetailsPage extends StatefulWidget {
 class _BookingDetailsPageState extends State<BookingDetailsPage> {
   int people = 1;
   DateTime? selectedDate;
+  String? selectedTime;
 
-  Future<void> pickDate() async {
+  final List<String> timeSlots = List.generate(10, (index) {
+    return '${(index + 9).toString().padLeft(2, '0')}:00'; // 09:00 to 18:00
+  });
+
+  Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2030),
     );
-
-    if (picked != null) {
-      setState(() => selectedDate = picked);
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
     }
   }
 
@@ -308,36 +349,48 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                   icon: const Icon(Icons.remove),
                   onPressed: () {
                     if (people > 1) {
-                      setState(() {
-                        people--;
-                      });
+                      setState(() => people--);
                     }
                   },
                 ),
-                Text(
-                  '$people',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
+                Text('$people', style: Theme.of(context).textTheme.headlineMedium),
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
                     if (people < 20) {
-                      setState(() {
-                        people++;
-                      });
+                      setState(() => people++);
                     }
                   },
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: pickDate,
-              child: Text(
-                selectedDate == null
-                    ? 'Select Date'
-                    : selectedDate.toString().split(' ')[0],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _pickDate,
+                  child: Text(selectedDate == null
+                      ? 'Select Date'
+                      : selectedDate.toString().split(' ')[0]),
+                ),
+                const SizedBox(width: 16),
+                DropdownButton<String>(
+                  hint: const Text('Select Time'),
+                  value: selectedTime,
+                  items: timeSlots.map((time) {
+                    return DropdownMenuItem(
+                      value: time,
+                      child: Text(time),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedTime = newValue;
+                    });
+                  },
+                ),
+              ],
             ),
           ],
         ),
