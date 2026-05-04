@@ -71,6 +71,32 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   });
 
   void _continue() {
+    if (_currentStep == 0 && building == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a building.')),
+      );
+      return;
+    }
+    if (_currentStep == 1 && room == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a room.')),
+      );
+      return;
+    }
+    if (_currentStep == 2) {
+      if (selectedDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a date.')),
+        );
+        return;
+      }
+      if (selectedTime == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a time.')),
+        );
+        return;
+      }
+    }
     if (_currentStep < 5) {
       setState(() => _currentStep++);
     }
@@ -205,7 +231,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
           Step(
             title: const Text('Confirm'),
             content: Text(
-              'Building: $building\nRoom: $room\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}',
+              'Building: $building\nRoom: $room\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}'
             ),
           ),
           const Step(
