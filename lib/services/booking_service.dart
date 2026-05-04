@@ -6,20 +6,36 @@ import 'package:uuid/uuid.dart';
 var uuid = Uuid();
 
 class BookingService {
+  // Private constructor
+  BookingService._privateConstructor();
+
+  // Static instance
+  static final BookingService _instance = BookingService._privateConstructor();
+
+  // Factory constructor
+  factory BookingService() {
+    return _instance;
+  }
+
   List<Booking>? _bookings;
 
   Future<List<Booking>> getBookings() async {
     if (_bookings == null) {
-      final String response =
-          await rootBundle.loadString('assets/data/bookings.json');
-      final data = await json.decode(response) as List;
-      _bookings = data.map((i) => Booking.fromJson(i)).toList();
+      try {
+        final String response =
+            await rootBundle.loadString('assets/data/bookings.json');
+        final data = await json.decode(response) as List;
+        _bookings = data.map((i) => Booking.fromJson(i)).toList();
+      } catch (e) {
+        // If the file doesn't exist or is empty, start with an empty list
+        _bookings = [];
+      }
     }
     return _bookings!;
   }
 
   Future<void> addBooking(Booking booking) async {
-    await getBookings();
+    final bookings = await getBookings();
 
     // Validation
     final bookingDate = DateTime.parse(booking.date);
@@ -50,6 +66,6 @@ class BookingService {
       createdAt: DateTime.now().toIso8601String(),
     );
 
-    _bookings!.add(newBooking);
+    bookings.add(newBooking);
   }
 }
