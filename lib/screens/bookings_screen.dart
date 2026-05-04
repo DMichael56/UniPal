@@ -129,11 +129,36 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
           Step(
             title: const Text('Details'),
             content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Number of people'),
-                  onChanged: (val) => people = int.tryParse(val) ?? 1,
+                const Text('Number of People:'),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: () {
+                        if (people > 1) {
+                          setState(() {
+                            people--;
+                          });
+                        }
+                      },
+                    ),
+                    Text(
+                      '$people',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        if (people < 20) {
+                          setState(() {
+                            people++;
+                          });
+                        }
+                      },
+                    ),
+                  ],
                 ),
                 TextField(
                   decoration: const InputDecoration(labelText: 'Date / Time'),
@@ -275,13 +300,35 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Number of People',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (val) => people = int.tryParse(val) ?? 1,
+            const Text('Number of People'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.remove),
+                  onPressed: () {
+                    if (people > 1) {
+                      setState(() {
+                        people--;
+                      });
+                    }
+                  },
+                ),
+                Text(
+                  '$people',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    if (people < 20) {
+                      setState(() {
+                        people++;
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             ElevatedButton(

@@ -21,6 +21,20 @@ class BookingService {
   Future<void> addBooking(Booking booking) async {
     await getBookings();
 
+    // Validation
+    final bookingDate = DateTime.parse(booking.date);
+    final now = DateTime.now();
+    // Normalize to compare dates only, ignoring time
+    final today = DateTime(now.year, now.month, now.day);
+
+    if (bookingDate.isBefore(today)) {
+      throw Exception('Booking date cannot be in the past.');
+    }
+
+    if (booking.attendees.isEmpty) {
+      throw Exception('A booking must have at least one attendee.');
+    }
+
     final newBooking = Booking(
       id: uuid.v4(),
       itemId: booking.itemId,
