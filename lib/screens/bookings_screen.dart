@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/models/booking_model.dart';
 import 'package:myapp/services/booking_service.dart';
+import 'package:uuid/uuid.dart';
+
+var uuid = Uuid();
 
 class BookingsScreen extends StatelessWidget {
   const BookingsScreen({super.key});
@@ -22,13 +25,10 @@ class BookingsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _tile(context, 'Start Booking (Step Flow)', const BookingStepperPage()),
+          _tile(context, 'Start Booking', const BookingStepperPage()),
           _tile(context, 'Building Selection', const BuildingSelectionPage()),
           _tile(context, 'Room Layout', const RoomLayoutPage()),
-          _tile(context, 'Booking Details', const BookingDetailsPage()),
-          _tile(context, 'Confirm Booking', const ConfirmBookingPage()),
-          _tile(context, 'View Booking', const ViewBookingPage()),
-          _tile(context, 'Cancel Booking', const CancelBookingPage()),
+          _tile(context, 'My Bookings', const ViewBookingPage()),
         ],
       ),
     );
@@ -63,10 +63,41 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   String? building;
   String? room;
   int people = 1;
-  String date = '';
+  DateTime? selectedDate;
+  String? selectedTime;
+
+  final List<String> timeSlots = List.generate(10, (index) {
+    return '${(index + 9).toString().padLeft(2, '0')}:00'; // 09:00 to 18:00
+  });
 
   void _continue() {
-    if (_currentStep < 5) {
+    if (_currentStep == 0 && building == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a building.')),
+      );
+      return;
+    }
+    if (_currentStep == 1 && room == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a room.')),
+      );
+      return;
+    }
+    if (_currentStep == 2) {
+      if (selectedDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a date.')),
+        );
+        return;
+      }
+      if (selectedTime == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a time.')),
+        );
+        return;
+      }
+    }
+    if (_currentStep < 3) {
       setState(() => _currentStep++);
     }
   }
@@ -76,6 +107,20 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
       setState(() => _currentStep--);
     } else {
       Navigator.pop(context);
+    }
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
     }
   }
 
@@ -129,32 +174,104 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
           Step(
             title: const Text('Details'),
             content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Number of people'),
-                  onChanged: (val) => people = int.tryParse(val) ?? 1,
+                const Text('Number of People:'),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: () {
+                        if (people > 1) {
+                          setState(() => people--);
+                        }
+                      },
+                    ),
+                    Text('$people', style: Theme.of(context).textTheme.titleLarge),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        if (people < 20) {
+                          setState(() => people++);
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Date / Time'),
-                  onChanged: (val) => date = val,
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _pickDate,
+                      child: Text(selectedDate == null
+                          ? 'Select Date'
+                          : selectedDate.toString().split(' ')[0]),
+                    ),
+                    const SizedBox(width: 16),
+                    DropdownButton<String>(
+                      hint: const Text('Select Time'),
+                      value: selectedTime,
+                      items: timeSlots.map((time) {
+                        return DropdownMenuItem(
+                          value: time,
+                          child: Text(time),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedTime = newValue;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
           Step(
             title: const Text('Confirm'),
-            content: Text(
-              'Building: $building\nRoom: $room\nPeople: $people\nDate: $date',
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Building: $building\nRoom: $room\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}',
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    final newBooking = Booking(
+                      id: uuid.v4(),
+                      itemId: room!,
+                      groupId: building!,
+                      bookedBy: 'user@example.com', // Placeholder
+                      title: 'Booking for Room $room',
+                      date: selectedDate.toString().split(' ')[0],
+                      startTime: selectedTime!,
+                      endTime: '${(int.parse(selectedTime!.split(':')[0]) + 1).toString().padLeft(2, '0')}:00',
+                      status: 'confirmed',
+                      attendees: List.generate(people, (index) => Attendee(userId: 'person${index + 1}@example.com', rsvp: 'accepted')).toList(),
+                      notificationSent: false,
+                      createdAt: DateTime.now().toIso8601String(),
+                    );
+
+                    await BookingService().addBooking(newBooking);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Booking Confirmed!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ViewBookingPage()),
+                    );
+                  },
+                  child: const Text('Confirm Booking'),
+                ),
+              ],
             ),
-          ),
-          const Step(
-            title: Text('Booked'),
-            content: Text('Your booking is confirmed!'),
-          ),
-          const Step(
-            title: Text('Manage'),
-            content: Text('View or cancel bookings here (future feature)'),
           ),
         ],
       ),
@@ -241,87 +358,6 @@ class RoomLayoutPage extends StatelessWidget {
   }
 }
 
-///booking details
-
-class BookingDetailsPage extends StatefulWidget {
-  const BookingDetailsPage({super.key});
-
-  @override
-  State<BookingDetailsPage> createState() => _BookingDetailsPageState();
-}
-
-class _BookingDetailsPageState extends State<BookingDetailsPage> {
-  int people = 1;
-  DateTime? selectedDate;
-
-  Future<void> pickDate() async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2030),
-    );
-
-    if (picked != null) {
-      setState(() => selectedDate = picked);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Booking Details')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Number of People',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (val) => people = int.tryParse(val) ?? 1,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: pickDate,
-              child: Text(
-                selectedDate == null
-                    ? 'Select Date'
-                    : selectedDate.toString().split(' ')[0],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-//Confirm bookings
-class ConfirmBookingPage extends StatelessWidget {
-  const ConfirmBookingPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Confirm Booking')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Booking Confirmed!')),
-            );
-          },
-          child: const Text('Confirm Booking'),
-        ),
-      ),
-    );
-  }
-}
-
-// View bookings
 
 class ViewBookingPage extends StatefulWidget {
   const ViewBookingPage({super.key});
@@ -339,6 +375,7 @@ class _ViewBookingPageState extends State<ViewBookingPage> {
     _bookings = BookingService().getBookings();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -350,6 +387,8 @@ class _ViewBookingPageState extends State<ViewBookingPage> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No bookings yet.'));
           } else {
             return ListView(
               children: snapshot.data!
@@ -362,34 +401,6 @@ class _ViewBookingPageState extends State<ViewBookingPage> {
             );
           }
         },
-      ),
-    );
-  }
-}
-
-//Cancel bookings
-
-class CancelBookingPage extends StatelessWidget {
-  const CancelBookingPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final bookings = ['Room 101 - Tomorrow', 'Room 202 - Friday'];
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Cancel Booking')),
-      body: ListView(
-        children: bookings
-            .map((b) => ListTile(
-                  title: Text(b),
-                  trailing: const Icon(Icons.cancel),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('$b cancelled')),
-                    );
-                  },
-                ))
-            .toList(),
       ),
     );
   }

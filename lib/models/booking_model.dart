@@ -45,6 +45,23 @@ class Booking {
       createdAt: json['createdAt'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'itemId': itemId,
+      'groupId': groupId,
+      'bookedBy': bookedBy,
+      'title': title,
+      'date': date,
+      'startTime': startTime,
+      'endTime': endTime,
+      'status': status,
+      'attendees': attendees.map((i) => i.toJson()).toList(),
+      'notificationSent': notificationSent,
+      'createdAt': createdAt,
+    };
+  }
 }
 
 class Attendee {
@@ -58,5 +75,12 @@ class Attendee {
       userId: json['userId'],
       rsvp: json['rsvp'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'rsvp': rsvp,
+    };
   }
 }
