@@ -4,229 +4,208 @@
             "id": "bld_1",
             "name": "University Library",
             "address": "Cambridge Rd, PO1 2ST",
-            "W3W" : "reader.rapid.post",
-            "floors" : 4,
-            "has_cafe" : true,
-            "has_elevator" : true,
-            "has_helpdesk" : true
+            "W3W": "reader.rapid.post",
+            "floors": 4,
+            "has_cafe": true,
+            "has_elevator": true,
+            "has_helpdesk": true
         },
-        
         {
             "id": "bld_2",
             "name": "Portland Building",
             "address": "Portland St, PO1 3AH",
-            "floors" : 3,
-            "W3W" : "point.baking.wished",
-            "has_cafe" : true,
-            "has_elevator" : true,
-            "has_helpdesk" : true
+            "floors": 3,
+            "W3W": "point.baking.wished",
+            "has_cafe": true,
+            "has_elevator": true,
+            "has_helpdesk": true
         },
-
         {
             "id": "bld_3",
             "name": "Richmond Building",
             "address": "Portland St, PO1 3DE",
-            "floors" : 2,
-            "W3W" : "case.vocal.fall",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : true
+            "floors": 2,
+            "W3W": "case.vocal.fall",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": true
         },
-
         {
             "id": "bld_4",
             "name": "Burnaby Building",
             "address": "Burnaby Rd, PO1 3QL",
-            "floors" : 5,
-            "W3W" : "famous.sings.pumps",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : false
+            "floors": 5,
+            "W3W": "famous.sings.pumps",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": false
         },
-
         {
-        
             "id": "bld_5",
             "name": "Anglesea Building",
             "address": "Anglesea Rd, PO1 3DJ",
-            "floors" : 4,
-            "W3W" : "puns.shed.reform",
-            "has_cafe" : true,
-            "has_elevator" : true,
-            "has_helpdesk" : false
+            "floors": 4,
+            "W3W": "puns.shed.reform",
+            "has_cafe": true,
+            "has_elevator": true,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_6",
             "name": "Buckingham Building",
             "address": "Lion Terrace, PO1 3HE",
-            "floors" : 4 ,
-            "W3W" : "nation.slide.edits",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : false
+            "floors": 4,
+            "W3W": "nation.slide.edits",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_7",
             "name": "Dennis Sciama Building",
             "address": "Burnaby Rd, PO1 3FX",
-            "floors" : 3,
-            "W3W" : "bumpy.buck.torch",
-            "has_cafe" : true,
-            "has_elevator" : false,
-            "has_helpdesk" : false
+            "floors": 3,
+            "W3W": "bumpy.buck.torch",
+            "has_cafe": true,
+            "has_elevator": false,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_8",
             "name": "William Beatty Building",
             "address": "Hampshire Terrace, PO1 2QG",
-            "floors" : 3,
-            "W3W" : "baked.care.zest",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : false
+            "floors": 3,
+            "W3W": "baked.care.zest",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_9",
             "name": "Eldon Building",
             "address": "Winston Churchill Ave, PO1 2DJ",
-            "floors" : 4,
-            "W3W" : "acting.ages.vague",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : true
+            "floors": 4,
+            "W3W": "acting.ages.vague",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": true
         },
-
         {
             "id": "bld_10",
             "name": "Institute of Marine Science",
             "address": "Ferry Rd, PO4 9LY",
-            "floors" : 3,
-            "W3W" : "making.media.glory",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : true
+            "floors": 3,
+            "W3W": "making.media.glory",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": true
         },
-
         {
             "id": "bld_11",
             "name": "John Pound Centre",
             "address": "23 Queen St, PO1 3HN",
-            "floors" : 3,
-            "W3W" : "soil.moth.orange",
-            "has_cafe" : true,
-            "has_elevator" : true,
-            "has_helpdesk" : true
+            "floors": 3,
+            "W3W": "soil.moth.orange",
+            "has_cafe": true,
+            "has_elevator": true,
+            "has_helpdesk": true
         },
-
         {
             "id": "bld_12",
             "name": "King Henry Building",
             "address": "King Henry I St, PO1 2DY",
-            "floors" : 5,
-            "W3W" : "insect.joins.dared",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : false
+            "floors": 5,
+            "W3W": "insect.joins.dared",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_13",
             "name": "Lion Gate Building",
             "address": "Lion Terrace, PO1 3HF",
-            "floors" : 2,
-            "W3W" : "bossy.struck.froth",
-            "has_cafe" : false,
-            "has_elevator" : false,
-            "has_helpdesk" : true
+            "floors": 2,
+            "W3W": "bossy.struck.froth",
+            "has_cafe": false,
+            "has_elevator": false,
+            "has_helpdesk": true
         },
-
         {
             "id": "bld_14",
             "name": "Milldam Building",
             "address": "Burnaby Rd, PO1 3AS",
-            "floors" : 2,
-            "W3W" : "aura.serves.splash",
-            "has_cafe" : false,
-            "has_elevator" : false,
-            "has_helpdesk" : false
+            "floors": 2,
+            "W3W": "aura.serves.splash",
+            "has_cafe": false,
+            "has_elevator": false,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_15",
             "name": "Park Building",
             "address": "King Henry I St, PO1 2DZ",
-            "floors" : 3,
-            "W3W" : "pulse.zoom.lonely",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : false
+            "floors": 3,
+            "W3W": "pulse.zoom.lonely",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_16",
             "name": "Spinnaker Building",
             "address": "2 Cambridge Rd, PO1 2ER",
-            "floors" : 3,
-            "W3W" : "films.misty.jobs",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : false
+            "floors": 3,
+            "W3W": "films.misty.jobs",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_17",
             "name": "St George's Building",
             "address": "141 High St, PO1 2HY",
-            "floors" : 2,
-            "W3W" : "pump.paths.quick",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : false
+            "floors": 2,
+            "W3W": "pump.paths.quick",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": false
         },
-
         {
             "id": "bld_18",
             "name": "St Michael's Building",
             "address": "St Michael's Rd, PO1 2DT",
-            "floors" : 3,
-            "W3W" : "washed.union.tape",
-            "has_cafe" : true,
-            "has_elevator" : false,
-            "has_helpdesk" : true
+            "floors": 3,
+            "W3W": "washed.union.tape",
+            "has_cafe": true,
+            "has_elevator": false,
+            "has_helpdesk": true
         },
-
         {
             "id": "bld_19",
             "name": "Union Building",
             "address": "Cambridge Rd, PO1 2EF",
-            "floors" : 4,
-            "W3W" : "spare.manliness.sheep",
-            "has_cafe" : false,
-            "has_elevator" : true,
-            "has_helpdesk" : true
+            "floors": 4,
+            "W3W": "spare.manliness.sheep",
+            "has_cafe": false,
+            "has_elevator": true,
+            "has_helpdesk": true
         },
-
         {
             "id": "bld_20",
             "name": "Wiltshire Building",
             "address": "Hampshire Terrace, PO1 2EG",
-            "floors" : 2,
-            "W3W" : "design.fans.mass",
-            "has_cafe" : false,
-            "has_elevator" : false,
-            "has_helpdesk" : false
+            "floors": 2,
+            "W3W": "design.fans.mass",
+            "has_cafe": false,
+            "has_elevator": false,
+            "has_helpdesk": false
         }
     ],
-
-    "rooms" : [
+    "rooms": [
         {
             "id": "r0.01_bld_1",
             "building_id": "bld_1",
-            "room_number": "0.01",
+            "room_number": "UL0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": true,
@@ -235,7 +214,7 @@
         {
             "id": "r1.05_bld_1",
             "building_id": "bld_1",
-            "room_number": "1.05",
+            "room_number": "UL1.05",
             "floor": 1,
             "has_projector": true,
             "has_computers": false,
@@ -244,7 +223,7 @@
         {
             "id": "r1.10_bld_1",
             "building_id": "bld_1",
-            "room_number": "1.10",
+            "room_number": "UL1.10",
             "floor": 1,
             "has_projector": false,
             "has_computers": true,
@@ -253,7 +232,7 @@
         {
             "id": "r2.01_bld_1",
             "building_id": "bld_1",
-            "room_number": "2.01",
+            "room_number": "UL2.01",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -262,7 +241,7 @@
         {
             "id": "r3.15_bld_1",
             "building_id": "bld_1",
-            "room_number": "3.15",
+            "room_number": "UL3.15",
             "floor": 3,
             "has_projector": false,
             "has_computers": false,
@@ -271,7 +250,7 @@
         {
             "id": "r0.02_bld_2",
             "building_id": "bld_2",
-            "room_number": "0.02",
+            "room_number": "PB0.02",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -280,7 +259,7 @@
         {
             "id": "r1.10_bld_2",
             "building_id": "bld_2",
-            "room_number": "1.10",
+            "room_number": "PB1.10",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -289,7 +268,7 @@
         {
             "id": "r1.21_bld_2",
             "building_id": "bld_2",
-            "room_number": "1.21",
+            "room_number": "PB1.21",
             "floor": 1,
             "has_projector": false,
             "has_computers": true,
@@ -298,7 +277,7 @@
         {
             "id": "r2.05_bld_2",
             "building_id": "bld_2",
-            "room_number": "2.05",
+            "room_number": "PB2.05",
             "floor": 2,
             "has_projector": true,
             "has_computers": false,
@@ -307,7 +286,7 @@
         {
             "id": "r3.10_bld_2",
             "building_id": "bld_2",
-            "room_number": "3.10",
+            "room_number": "PB3.10",
             "floor": 3,
             "has_projector": false,
             "has_computers": true,
@@ -316,7 +295,7 @@
         {
             "id": "r0.05_bld_3",
             "building_id": "bld_3",
-            "room_number": "0.05",
+            "room_number": "RB0.05",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -325,7 +304,7 @@
         {
             "id": "r1.01_bld_3",
             "building_id": "bld_3",
-            "room_number": "1.01",
+            "room_number": "RB1.01",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -334,7 +313,7 @@
         {
             "id": "r1.08_bld_3",
             "building_id": "bld_3",
-            "room_number": "1.08",
+            "room_number": "RB1.08",
             "floor": 1,
             "has_projector": false,
             "has_computers": false,
@@ -343,7 +322,7 @@
         {
             "id": "r2.15_bld_3",
             "building_id": "bld_3",
-            "room_number": "2.15",
+            "room_number": "RB2.15",
             "floor": 2,
             "has_projector": true,
             "has_computers": false,
@@ -352,7 +331,7 @@
         {
             "id": "r2.22_bld_3",
             "building_id": "bld_3",
-            "room_number": "2.22",
+            "room_number": "RB2.22",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -361,7 +340,7 @@
         {
             "id": "r0.01_bld_4",
             "building_id": "bld_4",
-            "room_number": "0.01",
+            "room_number": "BB0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -370,7 +349,7 @@
         {
             "id": "r1.15_bld_4",
             "building_id": "bld_4",
-            "room_number": "1.15",
+            "room_number": "BB1.15",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -379,7 +358,7 @@
         {
             "id": "r2.02_bld_4",
             "building_id": "bld_4",
-            "room_number": "2.02",
+            "room_number": "BB2.02",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -388,7 +367,7 @@
         {
             "id": "r4.05_bld_4",
             "building_id": "bld_4",
-            "room_number": "4.05",
+            "room_number": "BB4.05",
             "floor": 4,
             "has_projector": true,
             "has_computers": true,
@@ -397,7 +376,7 @@
         {
             "id": "r5.01_bld_4",
             "building_id": "bld_4",
-            "room_number": "5.01",
+            "room_number": "BB5.01",
             "floor": 5,
             "has_projector": true,
             "has_computers": false,
@@ -415,7 +394,7 @@
         {
             "id": "r1.05_bld_5",
             "building_id": "bld_5",
-            "room_number": "1.05",
+            "room_number": "AB1.05",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -424,7 +403,7 @@
         {
             "id": "r2.20_bld_5",
             "building_id": "bld_5",
-            "room_number": "2.20",
+            "room_number": "AB2.20",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -433,7 +412,7 @@
         {
             "id": "r3.01_bld_5",
             "building_id": "bld_5",
-            "room_number": "3.01",
+            "room_number": "AB3.01",
             "floor": 3,
             "has_projector": true,
             "has_computers": true,
@@ -442,7 +421,7 @@
         {
             "id": "r4.12_bld_5",
             "building_id": "bld_5",
-            "room_number": "4.12",
+            "room_number": "AB4.12",
             "floor": 4,
             "has_projector": false,
             "has_computers": false,
@@ -451,7 +430,7 @@
         {
             "id": "r0.15_bld_6",
             "building_id": "bld_6",
-            "room_number": "0.15",
+            "room_number": "BK0.15",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -460,7 +439,7 @@
         {
             "id": "r1.10_bld_6",
             "building_id": "bld_6",
-            "room_number": "1.10",
+            "room_number": "BK1.10",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -469,7 +448,7 @@
         {
             "id": "r1.12_bld_6",
             "building_id": "bld_6",
-            "room_number": "1.12",
+            "room_number": "BK1.12",
             "floor": 1,
             "has_projector": false,
             "has_computers": false,
@@ -478,7 +457,7 @@
         {
             "id": "r2.05_bld_6",
             "building_id": "bld_6",
-            "room_number": "2.05",
+            "room_number": "BK2.05",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -487,7 +466,7 @@
         {
             "id": "r3.01_bld_6",
             "building_id": "bld_6",
-            "room_number": "3.01",
+            "room_number": "BK3.01",
             "floor": 3,
             "has_projector": true,
             "has_computers": false,
@@ -496,7 +475,7 @@
         {
             "id": "r0.01_bld_7",
             "building_id": "bld_7",
-            "room_number": "0.01",
+            "room_number": "DS0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -505,7 +484,7 @@
         {
             "id": "r1.05_bld_7",
             "building_id": "bld_7",
-            "room_number": "1.05",
+            "room_number": "DS1.05",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -514,7 +493,7 @@
         {
             "id": "r2.10_bld_7",
             "building_id": "bld_7",
-            "room_number": "2.10",
+            "room_number": "DS2.10",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -523,7 +502,7 @@
         {
             "id": "r2.20_bld_7",
             "building_id": "bld_7",
-            "room_number": "2.20",
+            "room_number": "DS2.20",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -532,7 +511,7 @@
         {
             "id": "r3.15_bld_7",
             "building_id": "bld_7",
-            "room_number": "3.15",
+            "room_number": "DS3.15",
             "floor": 3,
             "has_projector": true,
             "has_computers": false,
@@ -541,7 +520,7 @@
         {
             "id": "r1.01_bld_8",
             "building_id": "bld_8",
-            "room_number": "1.01",
+            "room_number": "WB1.01",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -550,7 +529,7 @@
         {
             "id": "r2.15_bld_8",
             "building_id": "bld_8",
-            "room_number": "2.15",
+            "room_number": "WB2.15",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -559,7 +538,7 @@
         {
             "id": "r3.05_bld_8",
             "building_id": "bld_8",
-            "room_number": "3.05",
+            "room_number": "WB3.05",
             "floor": 3,
             "has_projector": true,
             "has_computers": true,
@@ -568,7 +547,7 @@
         {
             "id": "r2.10_bld_8",
             "building_id": "bld_8",
-            "room_number": "2.10",
+            "room_number": "WB2.10",
             "floor": 2,
             "has_projector": true,
             "has_computers": false,
@@ -577,7 +556,7 @@
         {
             "id": "r3.01_bld_8",
             "building_id": "bld_8",
-            "room_number": "3.01",
+            "room_number": "WB3.01",
             "floor": 3,
             "has_projector": false,
             "has_computers": false,
@@ -586,7 +565,7 @@
         {
             "id": "r0.10_bld_9",
             "building_id": "bld_9",
-            "room_number": "0.10",
+            "room_number": "EB0.10",
             "floor": 0,
             "has_projector": true,
             "has_computers": true,
@@ -595,7 +574,7 @@
         {
             "id": "r1.05_bld_9",
             "building_id": "bld_9",
-            "room_number": "1.05",
+            "room_number": "EB1.05",
             "floor": 1,
             "has_projector": false,
             "has_computers": false,
@@ -604,7 +583,7 @@
         {
             "id": "r1.22_bld_9",
             "building_id": "bld_9",
-            "room_number": "1.22",
+            "room_number": "EB1.22",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -613,7 +592,7 @@
         {
             "id": "r2.01_bld_9",
             "building_id": "bld_9",
-            "room_number": "2.01",
+            "room_number": "EB2.01",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -622,7 +601,7 @@
         {
             "id": "r4.15_bld_9",
             "building_id": "bld_9",
-            "room_number": "4.15",
+            "room_number": "EB4.15",
             "floor": 4,
             "has_projector": true,
             "has_computers": false,
@@ -631,7 +610,7 @@
         {
             "id": "r0.01_bld_10",
             "building_id": "bld_10",
-            "room_number": "0.01",
+            "room_number": "IM0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -640,7 +619,7 @@
         {
             "id": "r1.15_bld_10",
             "building_id": "bld_10",
-            "room_number": "1.15",
+            "room_number": "IM1.15",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -649,7 +628,7 @@
         {
             "id": "r2.05_bld_10",
             "building_id": "bld_10",
-            "room_number": "2.05",
+            "room_number": "IM2.05",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -658,7 +637,7 @@
         {
             "id": "r3.10_bld_10",
             "building_id": "bld_10",
-            "room_number": "3.10",
+            "room_number": "IM3.10",
             "floor": 3,
             "has_projector": true,
             "has_computers": true,
@@ -667,7 +646,7 @@
         {
             "id": "r2.01_bld_10",
             "building_id": "bld_10",
-            "room_number": "2.01",
+            "room_number": "IM2.01",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -676,7 +655,7 @@
         {
             "id": "r0.01_bld_11",
             "building_id": "bld_11",
-            "room_number": "0.01",
+            "room_number": "JP0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -685,7 +664,7 @@
         {
             "id": "r1.05_bld_11",
             "building_id": "bld_11",
-            "room_number": "1.05",
+            "room_number": "JP1.05",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -694,7 +673,7 @@
         {
             "id": "r1.20_bld_11",
             "building_id": "bld_11",
-            "room_number": "1.20",
+            "room_number": "JP1.20",
             "floor": 1,
             "has_projector": false,
             "has_computers": false,
@@ -703,7 +682,7 @@
         {
             "id": "r2.15_bld_11",
             "building_id": "bld_11",
-            "room_number": "2.15",
+            "room_number": "JP2.15",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -712,7 +691,7 @@
         {
             "id": "r3.01_bld_11",
             "building_id": "bld_11",
-            "room_number": "3.01",
+            "room_number": "JP3.01",
             "floor": 3,
             "has_projector": false,
             "has_computers": false,
@@ -721,7 +700,7 @@
         {
             "id": "r0.10_bld_12",
             "building_id": "bld_12",
-            "room_number": "0.10",
+            "room_number": "KH0.10",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -730,7 +709,7 @@
         {
             "id": "r1.02_bld_12",
             "building_id": "bld_12",
-            "room_number": "1.02",
+            "room_number": "KH1.02",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -739,7 +718,7 @@
         {
             "id": "r3.15_bld_12",
             "building_id": "bld_12",
-            "room_number": "3.15",
+            "room_number": "KH3.15",
             "floor": 3,
             "has_projector": false,
             "has_computers": false,
@@ -748,7 +727,7 @@
         {
             "id": "r2.05_bld_12",
             "building_id": "bld_12",
-            "room_number": "2.05",
+            "room_number": "KH2.05",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -757,7 +736,7 @@
         {
             "id": "r5.30_bld_12",
             "building_id": "bld_12",
-            "room_number": "5.30",
+            "room_number": "KH5.30",
             "floor": 5,
             "has_projector": false,
             "has_computers": false,
@@ -766,7 +745,7 @@
         {
             "id": "r0.01_bld_13",
             "building_id": "bld_13",
-            "room_number": "0.01",
+            "room_number": "LG0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -775,7 +754,7 @@
         {
             "id": "r1.01_bld_13",
             "building_id": "bld_13",
-            "room_number": "1.01",
+            "room_number": "LG1.01",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -784,7 +763,7 @@
         {
             "id": "r1.02_bld_13",
             "building_id": "bld_13",
-            "room_number": "1.02",
+            "room_number": "LG1.02",
             "floor": 1,
             "has_projector": true,
             "has_computers": false,
@@ -793,7 +772,7 @@
         {
             "id": "r2.10_bld_13",
             "building_id": "bld_13",
-            "room_number": "2.10",
+            "room_number": "LG2.10",
             "floor": 2,
             "has_projector": false,
             "has_computers": true,
@@ -802,7 +781,7 @@
         {
             "id": "r2.20_bld_13",
             "building_id": "bld_13",
-            "room_number": "2.20",
+            "room_number": "LG2.20",
             "floor": 2,
             "has_projector": true,
             "has_computers": false,
@@ -811,7 +790,7 @@
         {
             "id": "r0.05_bld_14",
             "building_id": "bld_14",
-            "room_number": "0.05",
+            "room_number": "MB0.05",
             "floor": 0,
             "has_projector": false,
             "has_computers": false,
@@ -820,7 +799,7 @@
         {
             "id": "r1.12_bld_14",
             "building_id": "bld_14",
-            "room_number": "1.12",
+            "room_number": "MB1.12",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -829,7 +808,7 @@
         {
             "id": "r1.13_bld_14",
             "building_id": "bld_14",
-            "room_number": "1.13",
+            "room_number": "MB1.13",
             "floor": 1,
             "has_projector": true,
             "has_computers": false,
@@ -838,7 +817,7 @@
         {
             "id": "r2.01_bld_14",
             "building_id": "bld_14",
-            "room_number": "2.01",
+            "room_number": "MB2.01",
             "floor": 2,
             "has_projector": false,
             "has_computers": true,
@@ -847,7 +826,7 @@
         {
             "id": "r2.10_bld_14",
             "building_id": "bld_14",
-            "room_number": "2.10",
+            "room_number": "MB2.10",
             "floor": 2,
             "has_projector": true,
             "has_computers": false,
@@ -856,7 +835,7 @@
         {
             "id": "r0.01_bld_15",
             "building_id": "bld_15",
-            "room_number": "0.01",
+            "room_number": "PK0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": true,
@@ -865,7 +844,7 @@
         {
             "id": "r1.08_bld_15",
             "building_id": "bld_15",
-            "room_number": "1.08",
+            "room_number": "PK1.08",
             "floor": 1,
             "has_projector": true,
             "has_computers": false,
@@ -874,7 +853,7 @@
         {
             "id": "r1.25_bld_15",
             "building_id": "bld_15",
-            "room_number": "1.25",
+            "room_number": "PK1.25",
             "floor": 1,
             "has_projector": false,
             "has_computers": false,
@@ -883,7 +862,7 @@
         {
             "id": "r2.15_bld_15",
             "building_id": "bld_15",
-            "room_number": "2.15",
+            "room_number": "PK2.15",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -892,7 +871,7 @@
         {
             "id": "r2.16_bld_15",
             "building_id": "bld_15",
-            "room_number": "2.16",
+            "room_number": "PK2.16",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -901,7 +880,7 @@
         {
             "id": "r0.01_bld_16",
             "building_id": "bld_16",
-            "room_number": "0.01",
+            "room_number": "SB0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -910,7 +889,7 @@
         {
             "id": "r1.12_bld_16",
             "building_id": "bld_16",
-            "room_number": "1.12",
+            "room_number": "SB1.12",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -919,7 +898,7 @@
         {
             "id": "r1.15_bld_16",
             "building_id": "bld_16",
-            "room_number": "1.15",
+            "room_number": "SB1.15",
             "floor": 1,
             "has_projector": false,
             "has_computers": false,
@@ -928,7 +907,7 @@
         {
             "id": "r2.05_bld_16",
             "building_id": "bld_16",
-            "room_number": "2.05",
+            "room_number": "SB2.05",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -937,7 +916,7 @@
         {
             "id": "r3.01_bld_16",
             "building_id": "bld_16",
-            "room_number": "3.01",
+            "room_number": "SB3.01",
             "floor": 3,
             "has_projector": false,
             "has_computers": false,
@@ -946,7 +925,7 @@
         {
             "id": "r0.05_bld_17",
             "building_id": "bld_17",
-            "room_number": "0.05",
+            "room_number": "SG0.05",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -955,7 +934,7 @@
         {
             "id": "r1.01_bld_17",
             "building_id": "bld_17",
-            "room_number": "1.01",
+            "room_number": "SG1.01",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -964,7 +943,7 @@
         {
             "id": "r2.10_bld_17",
             "building_id": "bld_17",
-            "room_number": "2.10",
+            "room_number": "SG2.10",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -973,7 +952,7 @@
         {
             "id": "r2.20_bld_17",
             "building_id": "bld_17",
-            "room_number": "2.20",
+            "room_number": "SG2.20",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -982,7 +961,7 @@
         {
             "id": "r2.05_bld_17",
             "building_id": "bld_17",
-            "room_number": "2.05",
+            "room_number": "SG2.05",
             "floor": 2,
             "has_projector": true,
             "has_computers": false,
@@ -991,7 +970,7 @@
         {
             "id": "r0.01_bld_18",
             "building_id": "bld_18",
-            "room_number": "0.01",
+            "room_number": "SM0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -1000,7 +979,7 @@
         {
             "id": "r1.01_bld_18",
             "building_id": "bld_18",
-            "room_number": "1.01",
+            "room_number": "SM1.01",
             "floor": 1,
             "has_projector": false,
             "has_computers": true,
@@ -1009,7 +988,7 @@
         {
             "id": "r1.02_bld_18",
             "building_id": "bld_18",
-            "room_number": "1.02",
+            "room_number": "SM1.02",
             "floor": 1,
             "has_projector": false,
             "has_computers": false,
@@ -1018,7 +997,7 @@
         {
             "id": "r2.05_bld_18",
             "building_id": "bld_18",
-            "room_number": "2.05",
+            "room_number": "SM2.05",
             "floor": 2,
             "has_projector": true,
             "has_computers": false,
@@ -1027,7 +1006,7 @@
         {
             "id": "r3.10_bld_18",
             "building_id": "bld_18",
-            "room_number": "3.10",
+            "room_number": "SM3.10",
             "floor": 3,
             "has_projector": false,
             "has_computers": false,
@@ -1036,7 +1015,7 @@
         {
             "id": "r0.10_bld_19",
             "building_id": "bld_19",
-            "room_number": "0.10",
+            "room_number": "UB0.10",
             "floor": 0,
             "has_projector": false,
             "has_computers": true,
@@ -1045,7 +1024,7 @@
         {
             "id": "r1.05_bld_19",
             "building_id": "bld_19",
-            "room_number": "1.05",
+            "room_number": "UB1.05",
             "floor": 1,
             "has_projector": true,
             "has_computers": false,
@@ -1054,7 +1033,7 @@
         {
             "id": "r1.06_bld_19",
             "building_id": "bld_19",
-            "room_number": "1.06",
+            "room_number": "UB1.06",
             "floor": 1,
             "has_projector": false,
             "has_computers": false,
@@ -1063,7 +1042,7 @@
         {
             "id": "r3.01_bld_19",
             "building_id": "bld_19",
-            "room_number": "3.01",
+            "room_number": "UB3.01",
             "floor": 3,
             "has_projector": true,
             "has_computers": true,
@@ -1072,7 +1051,7 @@
         {
             "id": "r4.15_bld_19",
             "building_id": "bld_19",
-            "room_number": "4.15",
+            "room_number": "UB4.15",
             "floor": 4,
             "has_projector": true,
             "has_computers": false,
@@ -1081,7 +1060,7 @@
         {
             "id": "r0.01_bld_20",
             "building_id": "bld_20",
-            "room_number": "0.01",
+            "room_number": "WL0.01",
             "floor": 0,
             "has_projector": true,
             "has_computers": false,
@@ -1090,7 +1069,7 @@
         {
             "id": "r1.10_bld_20",
             "building_id": "bld_20",
-            "room_number": "1.10",
+            "room_number": "WL1.10",
             "floor": 1,
             "has_projector": true,
             "has_computers": true,
@@ -1099,7 +1078,7 @@
         {
             "id": "r2.05_bld_20",
             "building_id": "bld_20",
-            "room_number": "2.05",
+            "room_number": "WL2.05",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
@@ -1108,7 +1087,7 @@
         {
             "id": "r2.15_bld_20",
             "building_id": "bld_20",
-            "room_number": "2.15",
+            "room_number": "WL2.15",
             "floor": 2,
             "has_projector": true,
             "has_computers": true,
@@ -1117,14 +1096,11 @@
         {
             "id": "r2.01_bld_20",
             "building_id": "bld_20",
-            "room_number": "2.01",
+            "room_number": "WL2.01",
             "floor": 2,
             "has_projector": false,
             "has_computers": false,
             "capacity": 10
         }
-      ] 
-    }
-
-
-
+    ]
+}
