@@ -77,5 +77,8 @@ class BookingService {
     }
   }
 
-  Future<void> removeBooking(String id) async {}
+  Future<void> removeBooking(String bookingId) async {
+    final bookings = await getBookings();
+    bookings.removeWhere((booking) => booking.id == bookingId);
+  }
 }
