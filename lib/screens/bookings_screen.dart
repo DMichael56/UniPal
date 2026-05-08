@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/models/booking_model.dart';
+import 'package:myapp/models/building_model.dart';
 import 'package:myapp/services/booking_service.dart';
+import 'package:myapp/services/building_service.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
@@ -60,8 +62,8 @@ class BookingStepperPage extends StatefulWidget {
 class _BookingStepperPageState extends State<BookingStepperPage> {
   int _currentStep = 0;
 
-  String? building;
-  String? room;
+  String? buildingId;
+  String? roomId;
   int people = 1;
   DateTime? selectedDate;
   String? selectedTime;
@@ -71,6 +73,16 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
     return '${(index + 9).toString().padLeft(2, '0')}:00'; // 09:00 to 18:00
   });
 
+  late Future<List<Building>> _buildings;
+  late Future<List<Room>> _rooms;
+
+  @override
+  void initState() {
+    super.initState();
+    _buildings = BuildingService().getBuildings();
+    _rooms = Future.value([]); // Initially empty
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -78,13 +90,13 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   }
 
   void _continue() {
-    if (_currentStep == 0 && building == null) {
+    if (_currentStep == 0 && buildingId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a building.')),
       );
       return;
     }
-    if (_currentStep == 1 && room == null) {
+    if (_currentStep == 1 && roomId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a room.')),
       );
@@ -158,30 +170,46 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
         steps: [
           Step(
             title: const Text('Building'),
-            content: DropdownButton<String>(
-              hint: const Text('Select building'),
-              value: building,
-              items: ['A', 'B', 'C']
-                  .map((b) => DropdownMenuItem(
-                        value: b,
-                        child: Text('Building $b (WiFi, Seats available)'),
+            content: FutureBuilder<List<Building>>(
+              future: _buildings,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return const CircularProgressIndicator();
+                return DropdownButton<String>(
+                  hint: const Text('Select building'),
+                  value: buildingId,
+                  items: snapshot.data!.map((b) => DropdownMenuItem(
+                        value: b.id,
+                        child: Text(b.name),
                       ))
-                  .toList(),
-              onChanged: (val) => setState(() => building = val),
+                      .toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      buildingId = val;
+                      roomId = null; // Reset room selection
+                      _rooms = BuildingService().getRooms(val!);
+                    });
+                  },
+                );
+              },
             ),
           ),
           Step(
             title: const Text('Room'),
-            content: DropdownButton<String>(
-              hint: const Text('Select room'),
-              value: room,
-              items: ['101', '102', '201']
-                  .map((r) => DropdownMenuItem(
-                        value: r,
-                        child: Text('Room $r'),
+            content: FutureBuilder<List<Room>>(
+              future: _rooms,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return const CircularProgressIndicator();
+                return DropdownButton<String>(
+                  hint: const Text('Select room'),
+                  value: roomId,
+                  items: snapshot.data!.map((r) => DropdownMenuItem(
+                        value: r.id,
+                        child: Text(r.roomNumber),
                       ))
-                  .toList(),
-              onChanged: (val) => setState(() => room = val),
+                      .toList(),
+                  onChanged: (val) => setState(() => roomId = val),
+                );
+              },
             ),
           ),
           Step(
@@ -255,15 +283,15 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Title: ${_titleController.text}\nBuilding: $building\nRoom: $room\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}',
+                  'Title: ${_titleController.text}\nBuilding: $buildingId\nRoom: $roomId\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}',
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     final newBooking = Booking(
                       id: uuid.v4(),
-                      itemId: room!,
-                      groupId: building!,
+                      itemId: roomId!,
+                      groupId: buildingId!,
                       bookedBy: 'user@example.com', // Placeholder
                       title: _titleController.text,
                       date: selectedDate.toString().split(' ')[0],
@@ -464,10 +492,15 @@ class _EditBookingPageState extends State<EditBookingPage> {
   late DateTime _selectedDate;
   late String _selectedTime;
   late int _people;
+  late String _buildingId;
+  late String _roomId;
 
   final List<String> timeSlots = List.generate(10, (index) {
     return '${(index + 9).toString().padLeft(2, '0')}:00'; // 09:00 to 18:00
   });
+
+  late Future<List<Building>> _buildings;
+  late Future<List<Room>> _rooms;
 
   @override
   void initState() {
@@ -476,6 +509,11 @@ class _EditBookingPageState extends State<EditBookingPage> {
     _selectedDate = DateTime.parse(widget.booking.date);
     _selectedTime = widget.booking.startTime;
     _people = widget.booking.attendees.length;
+    _buildingId = widget.booking.groupId;
+    _roomId = widget.booking.itemId;
+
+    _buildings = BuildingService().getBuildings();
+    _rooms = BuildingService().getRooms(_buildingId);
   }
 
   @override
@@ -511,6 +549,55 @@ class _EditBookingPageState extends State<EditBookingPage> {
               decoration: const InputDecoration(
                 labelText: 'Booking Title',
               ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                FutureBuilder<List<Building>>(
+                  future: _buildings,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const CircularProgressIndicator();
+                    return DropdownButton<String>(
+                      value: _buildingId,
+                      items: snapshot.data!.map((b) {
+                        return DropdownMenuItem(
+                          value: b.id,
+                          child: Text(b.name),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _buildingId = newValue!;
+                          _roomId = ''; // Reset room selection
+                          _rooms = BuildingService().getRooms(newValue);
+                        });
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(width: 16),
+                FutureBuilder<List<Room>>(
+                  future: _rooms,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const CircularProgressIndicator();
+                    return DropdownButton<String>(
+                      value: _roomId.isNotEmpty ? _roomId : null,
+                      hint: const Text('Select Room'),
+                      items: snapshot.data!.map((r) {
+                        return DropdownMenuItem(
+                          value: r.id,
+                          child: Text(r.roomNumber),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _roomId = newValue!;
+                        });
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             Row(
@@ -568,6 +655,8 @@ class _EditBookingPageState extends State<EditBookingPage> {
                   startTime: _selectedTime,
                   endTime: '${(int.parse(_selectedTime.split(':')[0]) + 1).toString().padLeft(2, '0')}:00',
                   attendees: List.generate(_people, (index) => Attendee(userId: 'person${index + 1}@example.com', rsvp: 'accepted')).toList(),
+                  groupId: _buildingId,
+                  itemId: _roomId,
                 );
                 await BookingService().updateBooking(updatedBooking);
                 Navigator.pop(context, true);
