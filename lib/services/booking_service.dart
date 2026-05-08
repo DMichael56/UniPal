@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import '../models/booking_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -17,21 +19,39 @@ class BookingService {
     return _instance;
   }
 
-  List<Booking>? _bookings;
+  static const String _fileName = 'bookings.json';
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/$_fileName');
+  }
 
   Future<List<Booking>> getBookings() async {
-    if (_bookings == null) {
-      try {
-        final String response =
-            await rootBundle.loadString('assets/data/bookings.json');
-        final data = await json.decode(response) as List;
-        _bookings = data.map((i) => Booking.fromJson(i)).toList();
-      } catch (e) {
-        // If the file doesn't exist or is empty, start with an empty list
-        _bookings = [];
+    try {
+      final file = await _localFile;
+      if (!await file.exists()) {
+        // If the file doesn't exist, load from assets and create it
+        final String response = await rootBundle.loadString('assets/data/bookings.json');
+        await file.writeAsString(response);
       }
+      final contents = await file.readAsString();
+      final data = json.decode(contents) as List;
+      return data.map((i) => Booking.fromJson(i)).toList();
+    } catch (e) {
+      // If there are any errors, return an empty list
+      return [];
     }
-    return _bookings!;
+  }
+
+  Future<void> _writeBookings(List<Booking> bookings) async {
+    final file = await _localFile;
+    final jsonList = bookings.map((b) => b.toJson()).toList();
+    await file.writeAsString(json.encode(jsonList));
   }
 
   Future<void> addBooking(Booking booking) async {
@@ -67,6 +87,7 @@ class BookingService {
     );
 
     bookings.add(newBooking);
+    await _writeBookings(bookings);
   }
 
   Future<void> updateBooking(Booking updatedBooking) async {
@@ -74,11 +95,13 @@ class BookingService {
     final index = bookings.indexWhere((b) => b.id == updatedBooking.id);
     if (index != -1) {
       bookings[index] = updatedBooking;
+      await _writeBookings(bookings);
     }
   }
 
   Future<void> removeBooking(String bookingId) async {
     final bookings = await getBookings();
     bookings.removeWhere((booking) => booking.id == bookingId);
+    await _writeBookings(bookings);
   }
 }
