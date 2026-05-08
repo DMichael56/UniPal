@@ -396,6 +396,11 @@ class _ViewBookingPageState extends State<ViewBookingPage> {
     _bookings = BookingService().getBookings();
   }
 
+  void _refreshBookings() {
+    setState(() {
+      _bookings = BookingService().getBookings();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -412,16 +417,165 @@ class _ViewBookingPageState extends State<ViewBookingPage> {
             return const Center(child: Text('No bookings yet.'));
           } else {
             return ListView(
-              children: snapshot.data!
-                  .map((b) => ListTile(
-                        title: Text(b.title),
-                        subtitle: Text('${b.date} at ${b.startTime} - ${b.endTime}'),
-                        leading: const Icon(Icons.meeting_room),
-                      ))
-                  .toList(),
+              children: snapshot.data!.map((booking) {
+                return ListTile(
+                  title: Text(booking.title),
+                  subtitle: Text('${booking.date} at ${booking.startTime} - ${booking.endTime}'),
+                  leading: const Icon(Icons.meeting_room),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      await BookingService().removeBooking(booking.id);
+                      _refreshBookings();
+                    },
+                  ),
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditBookingPage(booking: booking),
+                      ),
+                    );
+                    if (result == true) {
+                      _refreshBookings();
+                    }
+                  },
+                );
+              }).toList(),
             );
           }
         },
+      ),
+    );
+  }
+}
+
+class EditBookingPage extends StatefulWidget {
+  final Booking booking;
+
+  const EditBookingPage({super.key, required this.booking});
+
+  @override
+  State<EditBookingPage> createState() => _EditBookingPageState();
+}
+
+class _EditBookingPageState extends State<EditBookingPage> {
+  late TextEditingController _titleController;
+  late DateTime _selectedDate;
+  late String _selectedTime;
+  late int _people;
+
+  final List<String> timeSlots = List.generate(10, (index) {
+    return '${(index + 9).toString().padLeft(2, '0')}:00'; // 09:00 to 18:00
+  });
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.booking.title);
+    _selectedDate = DateTime.parse(widget.booking.date);
+    _selectedTime = widget.booking.startTime;
+    _people = widget.booking.attendees.length;
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Edit Booking')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                labelText: 'Booking Title',
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: _pickDate,
+                  child: Text(_selectedDate.toString().split(' ')[0]),
+                ),
+                const SizedBox(width: 16),
+                DropdownButton<String>(
+                  value: _selectedTime,
+                  items: timeSlots.map((time) {
+                    return DropdownMenuItem(
+                      value: time,
+                      child: Text(time),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedTime = newValue!;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                const Text('Number of People:'),
+                IconButton(
+                  icon: const Icon(Icons.remove),
+                  onPressed: () {
+                    if (_people > 1) {
+                      setState(() => _people--);
+                    }
+                  },
+                ),
+                Text('$_people', style: Theme.of(context).textTheme.titleLarge),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    if (_people < 20) {
+                      setState(() => _people++);
+                    }
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                final updatedBooking = widget.booking.copyWith(
+                  title: _titleController.text,
+                  date: _selectedDate.toString().split(' ')[0],
+                  startTime: _selectedTime,
+                  endTime: '${(int.parse(_selectedTime.split(':')[0]) + 1).toString().padLeft(2, '0')}:00',
+                  attendees: List.generate(_people, (index) => Attendee(userId: 'person${index + 1}@example.com', rsvp: 'accepted')).toList(),
+                );
+                await BookingService().updateBooking(updatedBooking);
+                Navigator.pop(context, true);
+              },
+              child: const Text('Save Changes'),
+            ),
+          ],
+        ),
       ),
     );
   }

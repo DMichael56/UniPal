@@ -68,4 +68,14 @@ class BookingService {
 
     bookings.add(newBooking);
   }
+
+  Future<void> updateBooking(Booking updatedBooking) async {
+    final bookings = await getBookings();
+    final index = bookings.indexWhere((b) => b.id == updatedBooking.id);
+    if (index != -1) {
+      bookings[index] = updatedBooking;
+    }
+  }
+
+  Future<void> removeBooking(String id) async {}
 }

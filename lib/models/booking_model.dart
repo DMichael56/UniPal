@@ -62,6 +62,36 @@ class Booking {
       'createdAt': createdAt,
     };
   }
+
+  Booking copyWith({
+    String? id,
+    String? itemId,
+    String? groupId,
+    String? bookedBy,
+    String? title,
+    String? date,
+    String? startTime,
+    String? endTime,
+    String? status,
+    List<Attendee>? attendees,
+    bool? notificationSent,
+    String? createdAt,
+  }) {
+    return Booking(
+      id: id ?? this.id,
+      itemId: itemId ?? this.itemId,
+      groupId: groupId ?? this.groupId,
+      bookedBy: bookedBy ?? this.bookedBy,
+      title: title ?? this.title,
+      date: date ?? this.date,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      status: status ?? this.status,
+      attendees: attendees ?? this.attendees,
+      notificationSent: notificationSent ?? this.notificationSent,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
 
 class Attendee {
@@ -82,5 +112,15 @@ class Attendee {
       'userId': userId,
       'rsvp': rsvp,
     };
+  }
+
+  Attendee copyWith({
+    String? userId,
+    String? rsvp,
+  }) {
+    return Attendee(
+      userId: userId ?? this.userId,
+      rsvp: rsvp ?? this.rsvp,
+    );
   }
 }
