@@ -65,10 +65,17 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   int people = 1;
   DateTime? selectedDate;
   String? selectedTime;
+  final TextEditingController _titleController = TextEditingController();
 
   final List<String> timeSlots = List.generate(10, (index) {
     return '${(index + 9).toString().padLeft(2, '0')}:00'; // 09:00 to 18:00
   });
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
 
   void _continue() {
     if (_currentStep == 0 && building == null) {
@@ -84,6 +91,12 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
       return;
     }
     if (_currentStep == 2) {
+      if (_titleController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a title.')),
+        );
+        return;
+      }
       if (selectedDate == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please select a date.')),
@@ -176,6 +189,14 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Booking Title',
+                    hintText: 'e.g., Team Meeting, Study Session',
+                  ),
+                ),
+                const SizedBox(height: 20),
                 const Text('Number of People:'),
                 Row(
                   children: [
@@ -234,7 +255,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Building: $building\nRoom: $room\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}',
+                  'Title: ${_titleController.text}\nBuilding: $building\nRoom: $room\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}',
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -244,7 +265,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
                       itemId: room!,
                       groupId: building!,
                       bookedBy: 'user@example.com', // Placeholder
-                      title: 'Booking for Room $room',
+                      title: _titleController.text,
                       date: selectedDate.toString().split(' ')[0],
                       startTime: selectedTime!,
                       endTime: '${(int.parse(selectedTime!.split(':')[0]) + 1).toString().padLeft(2, '0')}:00',
