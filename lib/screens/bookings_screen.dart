@@ -335,30 +335,52 @@ class BuildingSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buildings = [
-      {'name': 'Building A', 'amenities': 'WiFi, Projector', 'spaces': '10 spaces'},
-      {'name': 'Building B', 'amenities': 'Computers, AC', 'spaces': '5 spaces'},
-      {'name': 'Building C', 'amenities': 'Quiet Area', 'spaces': '2 spaces'},
-    ];
-
     return Scaffold(
       appBar: AppBar(title: const Text('Select Building')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: buildings.map((b) {
-          return Card(
-            child: ListTile(
-              title: Text(b['name']!),
-              subtitle: Text('${b['amenities']} • ${b['spaces']}'),
-              trailing: const Icon(Icons.arrow_forward),
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${b['name']} selected')),
-                );
-              },
-            ),
+      body: FutureBuilder<List<Building>>(
+        future: BuildingService().getBuildings(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return const Center(child: Text('Unable to load buildings.'));
+          }
+
+          final buildings = snapshot.data ?? [];
+          if (buildings.isEmpty) {
+            return const Center(child: Text('No buildings found.'));
+          }
+
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: buildings.map((building) {
+              final facilities = [
+                if (building.hasCafe) 'Cafe',
+                if (building.hasElevator) 'Elevator',
+                if (building.hasHelpdesk) 'Helpdesk',
+              ];
+
+              return Card(
+                child: ListTile(
+                  title: Text(building.name),
+                  subtitle: Text(
+                    facilities.isEmpty
+                        ? 'No listed facilities'
+                        : facilities.join(', '),
+                  ),
+                  trailing: const Icon(Icons.arrow_forward),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('${building.name} selected')),
+                    );
+                  },
+                ),
+              );
+            }).toList(),
           );
-        }).toList(),
+        },
       ),
     );
   }
