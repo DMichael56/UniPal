@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/models/booking_model.dart';
-import 'package:myapp/models/building_model.dart';
 import 'package:myapp/services/booking_service.dart';
-import 'package:myapp/services/building_service.dart';
+import 'package:myapp/services/json_service.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
@@ -58,57 +57,63 @@ class BookingStepperPage extends StatefulWidget {
   @override
   State<BookingStepperPage> createState() => _BookingStepperPageState();
 }
-
 class _BookingStepperPageState extends State<BookingStepperPage> {
   int _currentStep = 0;
 
-  String? buildingId;
-  String? roomId;
+  String? selectedBuildingId;
+  String? selectedBuildingName;
+  String? selectedRoomId;
+  String? selectedRoomNumber;
   int people = 1;
   DateTime? selectedDate;
   String? selectedTime;
-  final TextEditingController _titleController = TextEditingController();
+
+  List<Map<String, dynamic>> _allBuildings = [];
+  List<Map<String, dynamic>> _allRooms = [];
+  bool _isLoading = true;
 
   final List<String> timeSlots = List.generate(10, (index) {
-    return '${(index + 9).toString().padLeft(2, '0')}:00'; // 09:00 to 18:00
+    return '${(index + 9).toString().padLeft(2, '0')}:00';
   });
-
-  late Future<List<Building>> _buildings;
-  late Future<List<Room>> _rooms;
 
   @override
   void initState() {
     super.initState();
-    _buildings = BuildingService().getBuildings();
-    _rooms = Future.value([]); // Initially empty
+    _loadBuildingData();
   }
 
-  @override
-  void dispose() {
-    _titleController.dispose();
-    super.dispose();
+  Future<void> _loadBuildingData() async {
+    final data = await JsonService().getData('assets/data/building.json');
+    setState(() {
+      _allBuildings = List<Map<String, dynamic>>.from(data['buildings']);
+      _allRooms = List<Map<String, dynamic>>.from(data['rooms']);
+      _isLoading = false;
+    });
+  }
+
+  
+  // the same room number can never appear under a different building.
+  List<Map<String, dynamic>> get _roomsForSelectedBuilding {
+    if (selectedBuildingId == null) return [];
+    return _allRooms
+        .where((r) => r['building_id'] == selectedBuildingId)
+        .toList();
   }
 
   void _continue() {
-    if (_currentStep == 0 && buildingId == null) {
+    if (_currentStep == 0 && selectedBuildingId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a building.')),
       );
       return;
     }
-    if (_currentStep == 1 && roomId == null) {
+    if (_currentStep == 1 && selectedRoomId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a room.')),
       );
       return;
     }
     if (_currentStep == 2) {
-      if (_titleController.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter a title.')),
-        );
-        return;
-      }
       if (selectedDate == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please select a date.')),
@@ -151,6 +156,12 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Book a Room'),
@@ -170,79 +181,74 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
         steps: [
           Step(
             title: const Text('Building'),
-            content: FutureBuilder<List<Building>>(
-              future: _buildings,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const CircularProgressIndicator();
-                return DropdownButton<String>(
-                  hint: const Text('Select building'),
-                  value: buildingId,
-                  items: snapshot.data!.map((b) => DropdownMenuItem(
-                        value: b.id,
-                        child: Text(b.name),
-                      ))
-                      .toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      buildingId = val;
-                      roomId = null; // Reset room selection
-                      _rooms = BuildingService().getRooms(val!);
-                    });
-                  },
+            content: DropdownButton<String>(
+              hint: const Text('Select building'),
+              value: selectedBuildingId,
+              isExpanded: true,
+              items: _allBuildings.map((b) {
+                return DropdownMenuItem<String>(
+                  value: b['id'] as String,
+                  child: Text(b['name'] as String),
                 );
+              }).toList(),
+              onChanged: (val) {
+                setState(() {
+                  selectedBuildingId = val;
+                  selectedBuildingName = _allBuildings
+                      .firstWhere((b) => b['id'] == val)['name'] as String;
+                  // Reset room when building changes
+                  selectedRoomId = null;
+                  selectedRoomNumber = null;
+                });
               },
             ),
           ),
           Step(
             title: const Text('Room'),
-            content: FutureBuilder<List<Room>>(
-              future: _rooms,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const CircularProgressIndicator();
-                return DropdownButton<String>(
-                  hint: const Text('Select room'),
-                  value: roomId,
-                  items: snapshot.data!.map((r) => DropdownMenuItem(
-                        value: r.id,
-                        child: Text(r.roomNumber),
-                      ))
-                      .toList(),
-                  onChanged: (val) => setState(() => roomId = val),
-                );
-              },
-            ),
+            content: selectedBuildingId == null
+                ? const Text('Please select a building first.')
+                : DropdownButton<String>(
+                    hint: const Text('Select room'),
+                    value: selectedRoomId,
+                    isExpanded: true,
+                    items: _roomsForSelectedBuilding.map((r) {
+                      return DropdownMenuItem<String>(
+                        value: r['id'] as String,
+                        child: Text(
+                          '${r['room_number']}  •  Floor ${r['floor']}  •  Capacity ${r['capacity']}',
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      setState(() {
+                        selectedRoomId = val;
+                        selectedRoomNumber = _roomsForSelectedBuilding
+                            .firstWhere((r) => r['id'] == val)['room_number']
+                            as String;
+                      });
+                    },
+                  ),
           ),
           Step(
             title: const Text('Details'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Booking Title',
-                    hintText: 'e.g., Team Meeting, Study Session',
-                  ),
-                ),
-                const SizedBox(height: 20),
                 const Text('Number of People:'),
                 Row(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.remove),
                       onPressed: () {
-                        if (people > 1) {
-                          setState(() => people--);
-                        }
+                        if (people > 1) setState(() => people--);
                       },
                     ),
-                    Text('$people', style: Theme.of(context).textTheme.titleLarge),
+                    Text('$people',
+                        style: Theme.of(context).textTheme.titleLarge),
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        if (people < 20) {
-                          setState(() => people++);
-                        }
+                        if (people < 20) setState(() => people++);
                       },
                     ),
                   ],
@@ -267,9 +273,7 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
                         );
                       }).toList(),
                       onChanged: (newValue) {
-                        setState(() {
-                          selectedTime = newValue;
-                        });
+                        setState(() => selectedTime = newValue);
                       },
                     ),
                   ],
@@ -283,22 +287,33 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Title: ${_titleController.text}\nBuilding: $buildingId\nRoom: $roomId\nPeople: $people\nDate: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\nTime: ${selectedTime ?? 'N/A'}',
+                  'Building: $selectedBuildingName\n'
+                  'Room: $selectedRoomNumber\n'
+                  'People: $people\n'
+                  'Date: ${selectedDate?.toString().split(' ')[0] ?? 'N/A'}\n'
+                  'Time: ${selectedTime ?? 'N/A'}',
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     final newBooking = Booking(
                       id: uuid.v4(),
-                      itemId: roomId!,
-                      groupId: buildingId!,
-                      bookedBy: 'user@example.com', // Placeholder
-                      title: _titleController.text,
+                      itemId: selectedRoomId!,
+                      groupId: selectedBuildingId!,
+                      bookedBy: 'user@example.com',
+                      title: 'Booking for Room $selectedRoomNumber',
                       date: selectedDate.toString().split(' ')[0],
                       startTime: selectedTime!,
-                      endTime: '${(int.parse(selectedTime!.split(':')[0]) + 1).toString().padLeft(2, '0')}:00',
+                      endTime:
+                          '${(int.parse(selectedTime!.split(':')[0]) + 1).toString().padLeft(2, '0')}:00',
                       status: 'confirmed',
-                      attendees: List.generate(people, (index) => Attendee(userId: 'person${index + 1}@example.com', rsvp: 'accepted')).toList(),
+                      attendees: List.generate(
+                        people,
+                        (index) => Attendee(
+                          userId: 'person${index + 1}@example.com',
+                          rsvp: 'accepted',
+                        ),
+                      ),
                       notificationSent: false,
                       createdAt: DateTime.now().toIso8601String(),
                     );
@@ -314,7 +329,8 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
 
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => const ViewBookingPage()),
+                      MaterialPageRoute(
+                          builder: (_) => const ViewBookingPage()),
                     );
                   },
                   child: const Text('Confirm Booking'),
@@ -328,41 +344,83 @@ class _BookingStepperPageState extends State<BookingStepperPage> {
   }
 }
 
-//Building selection
 
-class BuildingSelectionPage extends StatelessWidget {
+//Building selection
+class BuildingSelectionPage extends StatefulWidget {
   const BuildingSelectionPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final buildings = [
-      {'name': 'Building A', 'amenities': 'WiFi, Projector', 'spaces': '10 spaces'},
-      {'name': 'Building B', 'amenities': 'Computers, AC', 'spaces': '5 spaces'},
-      {'name': 'Building C', 'amenities': 'Quiet Area', 'spaces': '2 spaces'},
-    ];
+  State<BuildingSelectionPage> createState() => _BuildingSelectionPageState();
+}
 
+class _BuildingSelectionPageState extends State<BuildingSelectionPage> {
+  List<Map<String, dynamic>> _buildings = [];
+  Map<String, int> _roomCounts = {};
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBuildings();
+  }
+
+  Future<void> _loadBuildings() async {
+    final data = await JsonService().getData('assets/data/building.json');
+    final buildings = List<Map<String, dynamic>>.from(data['buildings']);
+    final rooms = List<Map<String, dynamic>>.from(data['rooms']);
+
+    // Count rooms per building for display
+    final counts = <String, int>{};
+    for (final r in rooms) {
+      final id = r['building_id'] as String;
+      counts[id] = (counts[id] ?? 0) + 1;
+    }
+
+    setState(() {
+      _buildings = buildings;
+      _roomCounts = counts;
+      _isLoading = false;
+    });
+  }
+
+  String _amenities(Map<String, dynamic> b) {
+    final List<String> amenities = [];
+    if (b['has_cafe'] == true) amenities.add('Café');
+    if (b['has_elevator'] == true) amenities.add('Elevator');
+    if (b['has_helpdesk'] == true) amenities.add('Helpdesk');
+    return amenities.isEmpty ? 'No amenities listed' : amenities.join(', ');
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Select Building')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: buildings.map((b) {
-          return Card(
-            child: ListTile(
-              title: Text(b['name']!),
-              subtitle: Text('${b['amenities']} • ${b['spaces']}'),
-              trailing: const Icon(Icons.arrow_forward),
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${b['name']} selected')),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.all(16),
+              children: _buildings.map((b) {
+                final roomCount = _roomCounts[b['id']] ?? 0;
+                return Card(
+                  child: ListTile(
+                    title: Text(b['name'] as String),
+                    subtitle: Text(
+                      '${_amenities(b)}  •  $roomCount room${roomCount == 1 ? '' : 's'}  •  ${b['floors']} floor${(b['floors'] as int) == 1 ? '' : 's'}',
+                    ),
+                    trailing: const Icon(Icons.arrow_forward),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('${b['name']} selected')),
+                      );
+                    },
+                  ),
                 );
-              },
+              }).toList(),
             ),
-          );
-        }).toList(),
-      ),
     );
   }
 }
+
 
 // ROUGH room layout (to be changed a lot)
 
