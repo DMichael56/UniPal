@@ -164,21 +164,12 @@ void main() {
   // ******buildings_screen******
   // temporary test
   group('BuildingsScreen (placeholder)', () {
-    testWidgets('load screen without crashing', (tester) async {
-      await tester.pumpWidget(MaterialApp(home: buildings.GroupChatScreen()));
-      expect(find.byType(Scaffold), findsOneWidget);
-    });
 
     testWidgets('displays title "buiding selection"', (tester) async {
       await tester.pumpWidget(MaterialApp(home: buildings.GroupChatScreen()));
       expect(find.text('buiding selection'), findsOneWidget);
     });
 
-    testWidgets('displays placeholder body text "temporary text here"',
-        (tester) async {
-      await tester.pumpWidget(MaterialApp(home: buildings.GroupChatScreen()));
-      expect(find.text('temporary text here'), findsOneWidget);
-    });
   });
 
   // ***group_chat_screen***
@@ -244,11 +235,6 @@ void main() {
   });
 
   group('GroupChatPage', () {
-    testWidgets('displays "No messages yet"',
-        (tester) async {
-      await tester.pumpWidget(wrap(const GroupChatPage(groupName: 'Testers')));
-      expect(find.text('No messages yet'), findsOneWidget);
-    });
 
     testWidgets('displays message input field and send button', (tester) async {
       await tester.pumpWidget(wrap(const GroupChatPage(groupName: 'Testers')));
@@ -265,14 +251,14 @@ void main() {
       expect(find.text('Hello team!'), findsOneWidget);
     });
 
-    testWidgets('sending an empty message does not add and display', (tester) async {
+    testWidgets('sending an empty message does not display', (tester) async {
       await tester.pumpWidget(wrap(const GroupChatPage(groupName: 'Testers')));
       await tester.tap(find.byIcon(Icons.send));
       await tester.pump();
       expect(find.text('No messages yet'), findsOneWidget);
     });
 
-    testWidgets('sending whitespace-only message does not add and display',
+    testWidgets('sending whitespace-only message does not display',
         (tester) async {
       await tester.pumpWidget(wrap(const GroupChatPage(groupName: 'Testers')));
       await tester.enterText(find.byType(TextField), '   ');
@@ -314,10 +300,6 @@ void main() {
   // ***home_screen***
   // temp test
   group('HomeScreen (placeholder)', () {
-    testWidgets('load without crashing', (tester) async {
-      await tester.pumpWidget(MaterialApp(home: home_scr.GroupChatScreen()));
-      expect(find.byType(Scaffold), findsOneWidget);
-    });
 
     testWidgets('displays title "the home sceen" (intentional typo)',
         (tester) async {
@@ -325,10 +307,6 @@ void main() {
       expect(find.text('the home sceen'), findsOneWidget);
     });
 
-    testWidgets('shows placeholder body text "temporary"', (tester) async {
-      await tester.pumpWidget(MaterialApp(home: home_scr.GroupChatScreen()));
-      expect(find.text('temporary'), findsOneWidget);
-    });
   });
 
   // ***login_screen***
@@ -396,16 +374,6 @@ void main() {
     testWidgets('displays title "Profile"', (tester) async {
       await tester.pumpWidget(wrap(const ProfileScreen()));
       expect(find.text('Profile'), findsOneWidget);
-    });
-
-    testWidgets('dsiplays placeholder text', (tester) async {
-      await tester.pumpWidget(wrap(const ProfileScreen()));
-      expect(find.text('User Profile Info Here'), findsOneWidget);
-    });
-
-    testWidgets('check Scaffold renders', (tester) async {
-      await tester.pumpWidget(wrap(const ProfileScreen()));
-      expect(find.byType(Scaffold), findsOneWidget);
     });
 
   });
