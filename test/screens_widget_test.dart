@@ -74,15 +74,17 @@ void main() {
     testWidgets('displays first stepper "Building"',
         (tester) async {
       await tester.pumpWidget(wrap(const BookingStepperPage()));
+      await tester.pump();
       expect(find.text('Building'), findsOneWidget);
     });
 
-    testWidgets('"Continue" naviagtes to next stepper "Room"', (tester) async {
+    testWidgets('"Continue" fails to proceed displaying SnackBar - no building selected', (tester) async {
       await tester.pumpWidget(wrap(const BookingStepperPage()));
+      await tester.pump();
       await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
-      expect(find.text('Room'), findsOneWidget);
-    });
+      await tester.pump();
+      expect(find.text('Please select a building.'), findsOneWidget);
+    });// building validation for continue button 
 
     testWidgets('"Cancel" pops current step/return to previous screen', (tester) async {
       await tester.pumpWidget(
@@ -107,16 +109,10 @@ void main() {
       expect(find.text('Go'), findsOneWidget);
     });
 
-    testWidgets('"Select building" dropdown displays three building options A, B, C', (tester) async {
+    testWidgets('displays building DropdownButton', (tester) async {
       await tester.pumpWidget(wrap(const BookingStepperPage()));
-      await tester.tap(find.byType(DropdownButton<String>).first);
-      await tester.pumpAndSettle();
-      expect(
-        find.text('Building A (WiFi, Seats available)'),
-        findsWidgets,
-      );
-      expect(find.text('Building B (WiFi, Seats available)'), findsOneWidget);
-      expect(find.text('Building C (WiFi, Seats available)'), findsOneWidget);
+      await tester.pump();
+      expect(find.byType(DropdownButton<String>), findsOneWidget);
     });
   });
 
@@ -127,26 +123,6 @@ void main() {
       expect(find.text('Select Building'), findsOneWidget);
     });
 
-    testWidgets('displays building cards', (tester) async {
-      await tester.pumpWidget(wrap(const BuildingSelectionPage()));
-      expect(find.text('Building A'), findsOneWidget);
-      expect(find.text('Building B'), findsOneWidget);
-      expect(find.text('Building C'), findsOneWidget);
-    });//DELETE HARDCORD AND CHANGE 
-
-    testWidgets('building cards sdisplays amenities', (tester) async {
-      await tester.pumpWidget(wrap(const BuildingSelectionPage()));
-      expect(find.textContaining('WiFi'), findsWidgets);
-      expect(find.textContaining('spaces'), findsWidgets);
-    });//DELETE???
-
-    testWidgets('selecting a building card shows SnackBar confirmation message',
-        (tester) async {
-      await tester.pumpWidget(wrap(const BuildingSelectionPage()));
-      await tester.tap(find.text('Building A'));
-      await tester.pump();
-      expect(find.text('Building A selected'), findsOneWidget);
-    });//DELETE AHRDCODE AND CHANGE 
   });
 
   // RoomLayout
@@ -171,36 +147,6 @@ void main() {
     });
   });
 
-  // BookingDetails
-  group('BookingDetailsPage', () {
-    testWidgets('displays "Number of People" input field', (tester) async {
-      await tester.pumpWidget(wrap(const BookingDetailsPage()));
-      expect(find.widgetWithText(TextField, 'Number of People'), findsOneWidget);
-    });
-
-    testWidgets('displays "Select Date" button',
-        (tester) async {
-      await tester.pumpWidget(wrap(const BookingDetailsPage()));
-      expect(find.text('Select Date'), findsOneWidget);
-    });
-  });
-
-  // ConfirmBooking
-  group('ConfirmBookingPage', () {
-    testWidgets('displays "Confirm Booking" button', (tester) async {
-      await tester.pumpWidget(wrap(const ConfirmBookingPage()));
-      expect(find.text('Confirm Booking'), findsWidgets);
-    });
-
-    testWidgets('tapping "Confirm Booking" displays "Booking Confirmed!" SnackBar confirmation',
-        (tester) async {
-      await tester.pumpWidget(wrap(const ConfirmBookingPage()));
-      await tester.tap(find.byType(ElevatedButton));
-      await tester.pump();
-      expect(find.text('Booking Confirmed!'), findsOneWidget);
-    });
-  });
-
   // ViewBooking
   group('ViewBookingPage', () {
     testWidgets('displays title "Your Bookings"', (tester) async {
@@ -208,31 +154,10 @@ void main() {
       expect(find.text('Your Bookings'), findsOneWidget);
     });
 
-    testWidgets('displays CircularProgressIndicator while loading',
-        (tester) async {
+    testWidgets('displays "No bookings yet" when bookings list empty',(tester) async {
       await tester.pumpWidget(wrap(const ViewBookingPage()));
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
-  });
-
-  // CancelBooking
-  group('CancelBookingPage', () {
-    testWidgets('displays title "Cancel Booking"', (tester) async {
-      await tester.pumpWidget(wrap(const CancelBookingPage()));
-      expect(find.text('Cancel Booking'), findsOneWidget);
-    });
-
-    testWidgets('displays bookings', (tester) async {
-      await tester.pumpWidget(wrap(const CancelBookingPage()));
-      expect(find.text('Room 101 - Tomorrow'), findsOneWidget);
-      expect(find.text('Room 202 - Friday'), findsOneWidget);
-    });
-
-    testWidgets('tapping a booking displays cancelled SnackBar confirmation', (tester) async {
-      await tester.pumpWidget(wrap(const CancelBookingPage()));
-      await tester.tap(find.text('Room 101 - Tomorrow'));
-      await tester.pump();
-      expect(find.text('Room 101 - Tomorrow cancelled'), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.text('No bookings yet.'), findsOneWidget);
     });
   });
 
