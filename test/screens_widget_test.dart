@@ -30,19 +30,16 @@ void main() {
 
     testWidgets('displays all booking_screen buttons', (tester) async {
       await tester.pumpWidget(wrap(const BookingsScreen()));
-      expect(find.text('Start Booking (Step Flow)'), findsOneWidget);
+      expect(find.text('Start Booking'), findsOneWidget);
       expect(find.text('Building Selection'), findsOneWidget);
       expect(find.text('Room Layout'), findsOneWidget);
-      expect(find.text('Booking Details'), findsOneWidget);
-      expect(find.text('Confirm Booking'), findsOneWidget);
-      expect(find.text('View Booking'), findsOneWidget);
-      expect(find.text('Cancel Booking'), findsOneWidget);
+      expect(find.text('My Bookings'), findsOneWidget);
     });
 
-    testWidgets('"Start Booking (Step Flow)" button navigates to BookingStepperPage',
+    testWidgets('"Start Booking" button navigates to BookingStepperPage',
         (tester) async {
       await tester.pumpWidget(wrap(const BookingsScreen()));
-      await tester.tap(find.text('Start Booking (Step Flow)'));
+      await tester.tap(find.text('Start Booking'));
       await tester.pumpAndSettle();
       expect(find.text('Book a Room'), findsOneWidget);
     });
@@ -63,29 +60,13 @@ void main() {
       expect(find.text('Room Layout'), findsWidgets);
     });
 
-    testWidgets('"Booking Details" navigates to BookingDetailsPage',
+    testWidgets('"My Bookings" navigates to ViewBookingPage',
         (tester) async {
-      await tester.pumpWidget(wrap(const BookingsScreen()));
-      await tester.tap(find.text('Booking Details'));
-      await tester.pumpAndSettle();
-      expect(find.text('Booking Details'), findsWidgets);
-    });
-
-    testWidgets('"Confirm Booking" navigates to ConfirmBookingPage',
-        (tester) async {
-      await tester.pumpWidget(wrap(const BookingsScreen()));
-      await tester.tap(find.text('Confirm Booking'));
-      await tester.pumpAndSettle();
-      expect(find.text('Confirm Booking'), findsWidgets);
-    });
-
-    testWidgets('"Cancel Booking" navigates to CancelBookingPage',
-        (tester) async {
-      await tester.pumpWidget(wrap(const BookingsScreen()));
-      await tester.tap(find.text('Cancel Booking'));
-      await tester.pumpAndSettle();
-      expect(find.text('Cancel Booking'), findsWidgets);
-    });
+          await tester.pumpWidget(wrap(const BookingsScreen()));
+          await tester.tap(find.text('My Bookings'));
+          await tester.pumpAndSettle();
+          expect(find.text('Your Bookings'), findsOneWidget);
+        });
   });
 
   // BookingStepper
@@ -141,7 +122,7 @@ void main() {
 
   // BuildingSelection
   group('BuildingSelectionPage', () {
-    testWidgets('rdisplays "Select Building"', (tester) async {
+    testWidgets('displays "Select Building"', (tester) async {
       await tester.pumpWidget(wrap(const BuildingSelectionPage()));
       expect(find.text('Select Building'), findsOneWidget);
     });
@@ -151,13 +132,13 @@ void main() {
       expect(find.text('Building A'), findsOneWidget);
       expect(find.text('Building B'), findsOneWidget);
       expect(find.text('Building C'), findsOneWidget);
-    });
+    });//DELETE HARDCORD AND CHANGE 
 
     testWidgets('building cards sdisplays amenities', (tester) async {
       await tester.pumpWidget(wrap(const BuildingSelectionPage()));
       expect(find.textContaining('WiFi'), findsWidgets);
       expect(find.textContaining('spaces'), findsWidgets);
-    });
+    });//DELETE???
 
     testWidgets('selecting a building card shows SnackBar confirmation message',
         (tester) async {
@@ -165,7 +146,7 @@ void main() {
       await tester.tap(find.text('Building A'));
       await tester.pump();
       expect(find.text('Building A selected'), findsOneWidget);
-    });
+    });//DELETE AHRDCODE AND CHANGE 
   });
 
   // RoomLayout
