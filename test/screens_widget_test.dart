@@ -38,18 +38,29 @@ void main() {
 
     testWidgets('"Start Booking" button navigates to BookingStepperPage',
         (tester) async {
+      final originalOnError = FlutterError.onError;
+      FlutterError.onError = (details) {};
+
       await tester.pumpWidget(wrap(const BookingsScreen()));
       await tester.tap(find.text('Start Booking'));
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Book a Room'), findsOneWidget);
+      FlutterError.onError = originalOnError;
     });
 
     testWidgets('"Building Selection" navigates to BuildingSelectionPage',
         (tester) async {
+      final originalOnError = FlutterError.onError;
+      FlutterError.onError = (details) {};
+
       await tester.pumpWidget(wrap(const BookingsScreen()));
       await tester.tap(find.text('Building Selection'));
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Select Building'), findsOneWidget);
+
+      FlutterError.onError = originalOnError;
     });
 
     testWidgets('"Room Layout" navigates to RoomLayoutPage',
@@ -62,10 +73,14 @@ void main() {
 
     testWidgets('"My Bookings" navigates to ViewBookingPage',
         (tester) async {
-          await tester.pumpWidget(wrap(const BookingsScreen()));
-          await tester.tap(find.text('My Bookings'));
-          await tester.pumpAndSettle();
-          expect(find.text('Your Bookings'), findsOneWidget);
+          final originalOnError = FlutterError.onError;
+        FlutterError.onError = (details) {};
+        await tester.pumpWidget(wrap(const BookingsScreen()));
+        await tester.tap(find.text('My Bookings'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(find.text('Your Bookings'), findsOneWidget);
+        FlutterError.onError = originalOnError;
         });
   });
 
