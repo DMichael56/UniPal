@@ -63,9 +63,9 @@ Merging also has occurred, in the original client Server model, the system requi
 Implementation
 ==============
 
-* **Link to video demo:** <insert link to a 3-5 minute demo of your prototype>
+* **Link to video demo:** https://portdotacdotuk-my.sharepoint.com/:v:/g/personal/up2267885_myport_ac_uk/IQDY7Ii3G163QaCHEwTz5zlzAenq1xgFcqUSiMflEVYxNf8?e=n5qnsj
 * **Link to GitHub repository:** https://github.com/DMichael56/UniPal.git iacobcl
-* **Link to code documentation (readthedocs):** https://team-1d-unipal.readthedocs.io/en/latest/general.html
+* **Link to code documentation (readthedocs):** https://team-1d-unipal.readthedocs.io/en/latest/index.html
 * **Link to test plan:** https://portdotacdotuk-my.sharepoint.com/:x:/r/personal/up2267885_myport_ac_uk/_layouts/15/Doc.aspx?sourcedoc=%7BC7B7A548-1974-4278-8B39-B766D30E785A%7D&file=Test%20Plan%201D%20SUB.xlsx&action=default&mobileredirect=true: Editing right has been granted to iacobcl
 * **Link to automated tests and evidence of a test report:** The test report is in the Github repository as a word document
 
