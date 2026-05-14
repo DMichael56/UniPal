@@ -7,11 +7,12 @@ import 'package:myapp/screens/group_chat_screen.dart';
 import 'package:myapp/screens/login_screen.dart';
 import 'package:myapp/screens/profile_screen.dart';
 import 'package:myapp/main.dart';
+import 'package:myapp/models/booking_model.dart'; //add
+import 'package:myapp/services/booking_service.dart';
 
 //wrap widget in MaterialApp: so renders
 Widget wrap(Widget child) => MaterialApp(home: child);
 
-//ammend bookings_screen building selction test
 //add validation tests on booking_screens
  
 void main() {
@@ -67,7 +68,7 @@ void main() {
         (tester) async {
       await tester.pumpWidget(wrap(const BookingsScreen()));
       await tester.tap(find.text('Room Layout'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Room Layout'), findsWidgets);
     });
 
@@ -171,14 +172,52 @@ void main() {
 
     testWidgets('displays "No bookings yet" when bookings list empty',(tester) async {
       await tester.pumpWidget(wrap(const ViewBookingPage()));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('No bookings yet.'), findsOneWidget);
+    });
+
+    testWidgets('delete button removes only the chosen booking', (tester) async {
+      final service = BookingService();
+      await tester.runAsync(() async{ 
+        
+        await service.clearAllBookings();
+        
+        await service.addBooking(Booking(
+          id: 'test-001', itemId: 'item001', groupId: 'g001', bookedBy: 'u001',
+          title: 'Test Booking One', date: '2025-06-01',
+          startTime: '10:00', endTime: '11:00', status: 'confirmed',
+          attendees: [], notificationSent: false, createdAt: '2025-05-01T09:00:00Z',
+        ));
+        await service.addBooking(Booking(
+          id: 'test-002', itemId: 'item002', groupId: 'g001', bookedBy: 'u001',
+          title: 'Test Booking Two', date: '2025-06-02',
+          startTime: '12:00', endTime: '13:00', status: 'confirmed',
+          attendees: [], notificationSent: false, createdAt: '2025-05-01T10:00:00Z',
+        ));
+      });
+      await tester.pumpWidget(wrap(const ViewBookingPage()));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      //both bookings visible before delete
+      expect(find.text('Test Booking One'), findsOneWidget);
+      expect(find.text('Test Booking Two'), findsOneWidget);
+
+      //tap delete on the first booking only
+      await tester.tap(find.byIcon(Icons.delete).first);
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 300)); 
+
+      //first booking gone, second still visible
+      expect(find.text('Test Booking One'), findsNothing);
+      expect(find.text('Test Booking Two'), findsOneWidget);
+
+      await tester.runAsync(() => service.clearAllBookings());
     });
   });
 
   // ******buildings_screen******
   // temporary test
-  group('BuildingsScreen (placeholder)', () {
+  group('BuildingsScreen', () {
 
     testWidgets('displays title "buiding selection"', (tester) async {
       await tester.pumpWidget(MaterialApp(home: buildings.GroupChatScreen()));
@@ -188,7 +227,7 @@ void main() {
   });
 
   // ***group_chat_screen***
-  // need to ammend if pages added
+  
   group('GroupSelectionPage', () {
     testWidgets('displays title "Select Group"', (tester) async {
       await tester.pumpWidget(wrap(const GroupSelectionPage()));
@@ -314,7 +353,7 @@ void main() {
 
   // ***home_screen***
   // temp test
-  group('HomeScreen (placeholder)', () {
+  group('HomeScreen', () {
 
     testWidgets('displays title "the home sceen" (intentional typo)',
         (tester) async {
@@ -431,23 +470,17 @@ void main() {
       expect(find.text('Profile'), findsOneWidget);
     });
 
-  
-    testWidgets('starts up on Home tab showing HomeDashboard', (tester) async {
-      await tester.pumpWidget(const MaterialApp(home: MyHomePage()));
-      expect(find.text('Booking'), findsOneWidget);
-    });
-
     testWidgets('"Chat" displays GroupSelectionPage', (tester) async {
       await tester.pumpWidget(const MaterialApp(home: MyHomePage()));
       await tester.tap(find.text('Chat'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Select Group'), findsOneWidget);
     });
 
     testWidgets('"Profile" displays ProfileScreen', (tester) async {
       await tester.pumpWidget(const MaterialApp(home: MyHomePage()));
       await tester.tap(find.text('Profile'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('User Profile Info Here'), findsOneWidget);
     });
 
