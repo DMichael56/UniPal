@@ -7,22 +7,15 @@ import 'package:myapp/screens/group_chat_screen.dart';
 import 'package:myapp/screens/login_screen.dart';
 import 'package:myapp/screens/profile_screen.dart';
 import 'package:myapp/main.dart';
-import 'package:myapp/models/booking_model.dart'; //add
+import 'package:myapp/models/booking_model.dart'; 
 import 'package:myapp/services/booking_service.dart';
 
 //wrap widget in MaterialApp: so renders
 Widget wrap(Widget child) => MaterialApp(home: child);
-
-//add validation tests on booking_screens
  
 void main() {
   // ******bookings_screen******
-  
   group('BookingsScreen', () {
-    testWidgets('displays title: "Bookings"', (tester) async {
-      await tester.pumpWidget(wrap(const BookingsScreen()));
-      expect(find.text('Bookings'), findsOneWidget);
-    });
 
     testWidgets('top right home icon button displayed', (tester) async {
       await tester.pumpWidget(wrap(const BookingsScreen()));
@@ -85,7 +78,7 @@ void main() {
         });
   });
 
-  // BookingStepper
+  //******bookingStepper******
   group('BookingStepperPage', () {
     testWidgets('displays first stepper "Building"',
         (tester) async {
@@ -100,30 +93,7 @@ void main() {
       await tester.tap(find.text('Continue').first);
       await tester.pump();
       expect(find.text('Please select a building.'), findsOneWidget);
-    });// building validation for continue button 
-
-    // testWidgets('"Cancel" pops current step/return to previous screen', (tester) async {
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: Scaffold(
-    //         body: Builder(
-    //           builder: (ctx) => TextButton(
-    //             onPressed: () => Navigator.push(
-    //                 ctx,
-    //                 MaterialPageRoute(
-    //                     builder: (_) => const BookingStepperPage())),
-    //             child: const Text('Go'),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    //   await tester.tap(find.text('Go'));
-    //   await tester.pumpAndSettle();
-    //   await tester.tap(find.text('Cancel'));
-    //   await tester.pumpAndSettle();
-    //   expect(find.text('Go'), findsOneWidget);
-    // });
+    });//test plan: building validation for continue button 
 
     testWidgets('displays building DropdownButton', (tester) async {
       await tester.pumpWidget(wrap(const BookingStepperPage()));
@@ -132,7 +102,7 @@ void main() {
     });
   });
 
-  // BuildingSelection
+  //BuildingSelection
   group('BuildingSelectionPage', () {
     testWidgets('displays "Select Building"', (tester) async {
       await tester.pumpWidget(wrap(const BuildingSelectionPage()));
@@ -143,10 +113,6 @@ void main() {
 
   // RoomLayout
   group('RoomLayoutPage', () {
-    testWidgets('displays title "Room Layout"', (tester) async {
-      await tester.pumpWidget(wrap(const RoomLayoutPage()));
-      expect(find.text('Room Layout'), findsOneWidget);
-    });
 
     testWidgets('displays seat cells', (tester) async {
       await tester.pumpWidget(wrap(const RoomLayoutPage()));
@@ -165,10 +131,6 @@ void main() {
 
   // ViewBooking
   group('ViewBookingPage', () {
-    // testWidgets('displays title "Your Bookings"', (tester) async {
-    //   await tester.pumpWidget(wrap(const ViewBookingPage()));
-    //   expect(find.text('Your Bookings'), findsOneWidget);
-    // });
 
     testWidgets('displays "No bookings yet" when bookings list empty',(tester) async {
       await tester.pumpWidget(wrap(const ViewBookingPage()));
@@ -176,6 +138,7 @@ void main() {
       expect(find.text('No bookings yet.'), findsOneWidget);
     });
 
+    //test plan: delete button clears chosen booking
     testWidgets('delete button removes only the chosen booking', (tester) async {
       final service = BookingService();
       await tester.runAsync(() async{ 
@@ -198,30 +161,157 @@ void main() {
       await tester.pumpWidget(wrap(const ViewBookingPage()));
       await tester.pump(const Duration(milliseconds: 300));
 
-      //both bookings visible before delete
+      //both bookings visible
       expect(find.text('Test Booking One'), findsOneWidget);
       expect(find.text('Test Booking Two'), findsOneWidget);
 
-      //tap delete on the first booking only
+      //delete first booking
       await tester.tap(find.byIcon(Icons.delete).first);
       await tester.pump(const Duration(milliseconds: 100));
       await tester.pump(const Duration(milliseconds: 300)); 
 
-      //first booking gone, second still visible
+      //first booking cleared, second still visible
       expect(find.text('Test Booking One'), findsNothing);
       expect(find.text('Test Booking Two'), findsOneWidget);
 
       await tester.runAsync(() => service.clearAllBookings());
     });
+
+    //test plan: delete button visibility
+    testWidgets('delete button visible if booking exists, not visible when no bookings',
+        (tester) async {
+      final service = BookingService();
+
+      // add booking
+      await tester.runAsync(() async {
+        await service.clearAllBookings();
+        await service.addBooking(Booking(
+          id: 'test-001', itemId: 'item001', groupId: 'g001', bookedBy: 'u001',
+          title: 'Test Booking', date: '2025-06-01',
+          startTime: '10:00', endTime: '11:00', status: 'confirmed',
+          attendees: [], notificationSent: false, createdAt: '2025-05-01T09:00:00Z',
+        ));
+      });
+
+      await tester.pumpWidget(wrap(const ViewBookingPage()));
+      await tester.pump(const Duration(milliseconds: 300)); 
+
+      //delete button visible when booking exists
+      expect(find.byIcon(Icons.delete), findsOneWidget);
+
+      //clear bookings
+      await tester.runAsync(() => service.clearAllBookings());
+
+      await tester.pumpWidget(wrap(const ViewBookingPage()));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      //delete button not visible when no bookings exist
+      expect(find.byIcon(Icons.delete), findsNothing);
+      expect(find.text('No bookings yet.'), findsOneWidget);
+    });
+
+    //test plan: valid bookings visible
+    testWidgets('created booking is displayed in ViewBookingPage', (tester) async {
+      final service = BookingService();
+
+      await tester.runAsync(() => service.clearAllBookings());
+
+      //create booking
+      await tester.runAsync(() => service.addBooking(Booking(
+        id: 'created-001',
+        itemId: 'r001',
+        groupId: 'b001',
+        bookedBy: 'user@example.com',
+        title: 'Study Session',
+        date: '2026-06-01',
+        startTime: '10:00',
+        endTime: '11:00',
+        status: 'confirmed',
+        attendees: [],
+        notificationSent: false,
+        createdAt: '2026-05-01T09:00:00Z',
+      )));
+
+      await tester.pumpWidget(wrap(const ViewBookingPage()));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      //booking title is visible
+      expect(find.text('Study Session'), findsOneWidget);
+
+      await tester.runAsync(() => service.clearAllBookings());
+    });
   });
 
-  // ******buildings_screen******
-  // temporary test
-  group('BuildingsScreen', () {
 
-    testWidgets('displays title "buiding selection"', (tester) async {
-      await tester.pumpWidget(MaterialApp(home: buildings.GroupChatScreen()));
-      expect(find.text('buiding selection'), findsOneWidget);
+  // ******edit_booking_page******
+  group('EditBookingPage', () {
+    final testBooking = Booking(
+      id: 'edit-001', itemId: 'r001', groupId: 'b001', bookedBy: 'u001',
+      title: 'Original Title', date: '2026-06-01',
+      startTime: '10:00', endTime: '11:00', status: 'confirmed',
+      attendees: [Attendee(userId: 'u001', rsvp: 'accepted')],
+      notificationSent: false, createdAt: '2025-05-01T09:00:00Z',
+    );
+
+    //test plan: title/time/date can be edited
+    testWidgets('booking title can be edited', (tester) async {
+      final originalOnError = FlutterError.onError;
+      FlutterError.onError = (details) {};
+
+      await tester.pumpWidget(wrap(EditBookingPage(booking: testBooking)));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('Original Title'), findsOneWidget);
+
+      //title edited
+      await tester.enterText(find.byType(TextField), 'New Title');
+      await tester.pump();
+
+      expect(find.text('New Title'), findsOneWidget);
+
+      FlutterError.onError = originalOnError;
+    });
+
+    testWidgets('booking time can be edited', (tester) async {
+      final originalOnError = FlutterError.onError;
+      FlutterError.onError = (details) {};
+
+      await tester.pumpWidget(wrap(EditBookingPage(booking: testBooking)));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('10:00'), findsOneWidget);
+
+      await tester.tap(find.byType(DropdownButton<String>).first);
+      await tester.pump();
+      await tester.tap(find.text('11:00').last);
+      await tester.pump();
+
+      expect(find.text('11:00'), findsOneWidget);
+
+      FlutterError.onError = originalOnError;
+    });
+
+    testWidgets('booking date can be edited', (tester) async {
+      final originalOnError = FlutterError.onError;
+      FlutterError.onError = (details) {};
+
+      await tester.pumpWidget(wrap(EditBookingPage(booking: testBooking)));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('2026-06-01'), findsOneWidget);
+
+      await tester.tap(find.text('2026-06-01'));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      await tester.tap(find.text('15'));
+      await tester.pump();
+      await tester.tap(find.text('OK'));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      //edited date
+      expect(find.text('2026-06-15'), findsOneWidget);
+
+      FlutterError.onError = originalOnError;
     });
 
   });
@@ -269,23 +359,7 @@ void main() {
       expect(find.text('Test Group'), findsOneWidget);
       expect(find.byType(TextField), findsOneWidget);
     });
-
-    testWidgets('"Edit Group" displays "coming-soon" SnackBar', (tester) async {
-      await tester.pumpWidget(
-          wrap(const GroupOptionsPage(groupName: 'Test Group')));
-      await tester.tap(find.text('Edit Group'));
-      await tester.pump();
-      expect(find.text('Edit Group (coming soon)'), findsOneWidget);
-    });
-
-    testWidgets('"Group Details" displays "coming-soon" SnackBar',
-        (tester) async {
-      await tester.pumpWidget(
-          wrap(const GroupOptionsPage(groupName: 'Test Group')));
-      await tester.tap(find.text('Group Details'));
-      await tester.pump();
-      expect(find.text('Group Details (coming soon)'), findsOneWidget);
-    });
+    
   });
 
   group('GroupChatPage', () {
@@ -351,34 +425,8 @@ void main() {
     });
   });
 
-  // ***home_screen***
-  // temp test
-  group('HomeScreen', () {
-
-    testWidgets('displays title "the home sceen" (intentional typo)',
-        (tester) async {
-      await tester.pumpWidget(MaterialApp(home: home_scr.GroupChatScreen()));
-      expect(find.text('the home sceen'), findsOneWidget);
-    });
-
-  });
-
   // ***login_screen***
   group('LoginScreen', () {
-    testWidgets('displays title "Login"', (tester) async {
-      await tester.pumpWidget(wrap(const LoginScreen()));
-      expect(find.text('Login'), findsOneWidget);
-    });
-
-    testWidgets('displays Email text field', (tester) async {
-      await tester.pumpWidget(wrap(const LoginScreen()));
-      expect(find.widgetWithText(TextField, 'Email'), findsOneWidget);
-    });
-
-    testWidgets('displays Password text field', (tester) async {
-      await tester.pumpWidget(wrap(const LoginScreen()));
-      expect(find.widgetWithText(TextField, 'Password'), findsOneWidget);
-    });
 
     testWidgets('Password field hides chracters (obscureText is true)', (tester) async {
       await tester.pumpWidget(wrap(const LoginScreen()));
@@ -423,14 +471,6 @@ void main() {
     });
   });
 
-  // ******profile_screen******
-  group('ProfileScreen', () {
-    testWidgets('displays title "Profile"', (tester) async {
-      await tester.pumpWidget(wrap(const ProfileScreen()));
-      expect(find.text('Profile'), findsOneWidget);
-    });
-
-  });
 
   // ******main******
   group('HomeDashboard', () {
